@@ -82,12 +82,12 @@ CREATE TABLE Poolpoints (
 
 
 
-CREATE TABLE Testrating (
+CREATE TABLE Testratings (
 	id serial NOT NULL,
 	voter_id integer NOT NULL,
 	test_id integer NOT NULL,
 	vote integer NOT NULL,
-	CONSTRAINT Testrating_pk PRIMARY KEY (id)
+	CONSTRAINT Testratings_pk PRIMARY KEY (id)
 ) WITH (
   OIDS=FALSE
 );
@@ -109,6 +109,6 @@ ALTER TABLE Userstests ADD CONSTRAINT Userstests_fk1 FOREIGN KEY (test_id) REFER
 ALTER TABLE Poolpoints ADD CONSTRAINT Poolpoints_fk0 FOREIGN KEY (voter_id) REFERENCES Users(id);
 ALTER TABLE Poolpoints ADD CONSTRAINT Poolpoints_fk1 FOREIGN KEY (test_id) REFERENCES Tests(id);
 
-ALTER TABLE Testrating ADD CONSTRAINT Testrating_fk0 FOREIGN KEY (voter_id) REFERENCES Users(id);
-ALTER TABLE Testrating ADD CONSTRAINT Testrating_fk1 FOREIGN KEY (test_id) REFERENCES Tests(id);
+ALTER TABLE Testratings ADD CONSTRAINT Testratings_fk0 FOREIGN KEY (voter_id) REFERENCES Users(id);
+ALTER TABLE Testratings ADD CONSTRAINT Testratings_fk1 FOREIGN KEY (test_id) REFERENCES Tests(id);
 
