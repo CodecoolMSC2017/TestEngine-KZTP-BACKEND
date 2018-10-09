@@ -25,6 +25,12 @@ public class Test {
     @OneToMany(mappedBy = "test")
     private List<PoolPoints> poolPoints = new ArrayList<>();
 
+    @OneToMany(mappedBy = "test")
+    private List<TestRatings> testRatings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "test")
+    private List<UsersTest> usersTests = new ArrayList<>();
+
     public Test() {
     }
 
@@ -90,5 +96,21 @@ public class Test {
 
     public void setPoolPoints(List<PoolPoints> poolPoints) {
         this.poolPoints = poolPoints;
+    }
+
+    public List<TestRatings> getTestRatings() {
+        return testRatings;
+    }
+
+    public void setTestRatings(List<TestRatings> testRatings) {
+        this.testRatings = testRatings;
+    }
+
+    public List<UsersTest> getUsersTests() {
+        return usersTests;
+    }
+
+    public void setUsersTests(List<UsersTest> usersTests) {
+        this.usersTests = usersTests;
     }
 }
