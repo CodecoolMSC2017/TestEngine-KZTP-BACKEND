@@ -3,6 +3,8 @@ package com.kztp.testengine.model;
 import javax.persistence.Id;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Tests")
@@ -19,6 +21,9 @@ public class Test {
     private User creator;
     private boolean enabled;
     private String type;
+
+    @OneToMany(mappedBy = "test")
+    private List<PoolPoints> poolPoints = new ArrayList<>();
 
     public Test() {
     }
