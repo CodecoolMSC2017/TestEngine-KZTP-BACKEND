@@ -83,4 +83,12 @@ public class Test {
     public void setType(String type) {
         this.type = type;
     }
+
+    public List<PoolPoints> getPoolPoints() {
+        return poolPoints;
+    }
+
+    public void setPoolPoints(List<PoolPoints> poolPoints) {
+        this.poolPoints = poolPoints;
+    }
 }
