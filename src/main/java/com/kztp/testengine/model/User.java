@@ -26,6 +26,10 @@ public class User {
     @Column(name = "authority")
     private List<String> authorities;
 
+    @OneToMany(mappedBy = "user")
+    private List<UsersTest> usersTest = new ArrayList<>();
+
+
     public User() {
     }
 
@@ -91,5 +95,13 @@ public class User {
 
     public void setAuthorities(List<String> authorities) {
         this.authorities = authorities;
+    }
+
+    public List<UsersTest> getUsersTest() {
+        return usersTest;
+    }
+
+    public void setUsersTest(List<UsersTest> usersTest) {
+        this.usersTest = usersTest;
     }
 }
