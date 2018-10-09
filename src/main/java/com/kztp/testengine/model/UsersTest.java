@@ -9,10 +9,10 @@ public class UsersTest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ManyToOne
-    @Column(name = "user_id")
+    @JoinColumn(name = "user_id")
     private User user;
     @ManyToOne
-    @Column(name = "test_id")
+    @JoinColumn(name = "test_id")
     private Test test;
     @Column(name = "max_points")
     private Integer maxPoints;
