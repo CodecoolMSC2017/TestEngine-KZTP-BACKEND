@@ -18,7 +18,7 @@ public class UsersTest {
     private Integer maxPoints;
     @Column(name = "actual_points")
     private Integer actualPoints;
-    private Integer percetage;
+    private Integer percentage;
 
     public UsersTest() {
     }
@@ -64,10 +64,10 @@ public class UsersTest {
     }
 
     public Integer getPercetage() {
-        return percetage;
+        return percentage;
     }
 
-    public void setPercetage(Integer percetage) {
-        this.percetage = percetage;
+    public void setPercetage(Integer percentage) {
+        this.percentage = percentage;
     }
 }
