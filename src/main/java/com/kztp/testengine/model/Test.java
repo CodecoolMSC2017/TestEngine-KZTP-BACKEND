@@ -1,6 +1,6 @@
 package com.kztp.testengine.model;
 
-import org.springframework.data.annotation.Id;
+import javax.persistence.Id;
 
 import javax.persistence.*;
 
