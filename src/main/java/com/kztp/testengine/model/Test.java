@@ -14,6 +14,8 @@ public class Test {
     private int price;
     @Column(name = "max_points")
     private int maxPoints;
+    @ManyToOne
+    @JoinColumn(name = "creator", referencedColumnName = "id")
     private User creator;
     private boolean enabled;
     private String type;
