@@ -1,11 +1,13 @@
 package com.kztp.testengine.service;
 
+import com.kztp.testengine.exception.UnauthorizedRequestException;
 import com.kztp.testengine.model.User;
 import com.kztp.testengine.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
@@ -39,33 +41,29 @@ public final class UserService {
     }
 
     public User createUser(String email,String username,String password,String confirmationPassword) {
-        if(password.length() < 8 ) {
-            throw new IllegalArgumentException("Password is too short.Enter minimum 8 characters");
+        if(isEveryInputValid(email,username,password,confirmationPassword)) {
+            userDetailsManager.createUser(new org.springframework.security.core.userdetails.User(
+                    email,
+                    pwEncoder.encode(password),
+                    AuthorityUtils.createAuthorityList("USER_ROLE")));
         }
-
-        if (isEmailTaken(email)) {
-            throw new IllegalArgumentException("This email address already exists, please choose another one!");
-        }
-
-        if (email.equals("") || password.equals("")) {
-            throw new IllegalArgumentException("Fill out each inputs!");
-        }
-
-        if (userDetailsManager.userExists(username)) {
-            throw new IllegalArgumentException("This username is already taken,please choose another one.");
-        }
-
-        if (!password.equals(confirmationPassword)) {
-            throw new IllegalArgumentException("Password and confirmation password doesn't match.");
-        }
-
-        userDetailsManager.createUser(new org.springframework.security.core.userdetails.User(
-                email,
-                pwEncoder.encode(password),
-                AuthorityUtils.createAuthorityList("USER_ROLE")));
         return userRepository.findByUsername(username);
     }
 
+    public User createAdmin(String username,String email,String password,String confirmationPassword) throws UnauthorizedRequestException {
+        User currentUser = getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(currentUser.getAuthorities().contains("ADMIN_ROLE")) {
+            if (isEveryInputValid(email, username, password, confirmationPassword)) {
+                userDetailsManager.createUser(new org.springframework.security.core.userdetails.User(
+                        email,
+                        pwEncoder.encode(password),
+                        AuthorityUtils.createAuthorityList("ADMIN_ROLE")));
+            }
+        }else {
+            throw new UnauthorizedRequestException("You don't have the authority for this action.");
+        }
+        return userRepository.findByUsername(username);
+    }
     public void changePassword(int userId,String oldPassword, String newPassword) {
         User user = userRepository.findById(userId);
         if (oldPassword.equals(pwEncoder.encode(oldPassword))) {
@@ -92,6 +90,30 @@ public final class UserService {
         }
 
         return false;
+    }
+
+
+    private boolean isEveryInputValid(String email,String username,String password,String confirmationPassword) {
+        if(password.length() < 8 ) {
+            throw new IllegalArgumentException("Password is too short.Enter minimum 8 characters");
+        }
+
+        if (isEmailTaken(email)) {
+            throw new IllegalArgumentException("This email address already exists, please choose another one!");
+        }
+
+        if (email.equals("") || password.equals("")) {
+            throw new IllegalArgumentException("Fill out each inputs!");
+        }
+
+        if (userDetailsManager.userExists(username)) {
+            throw new IllegalArgumentException("This username is already taken,please choose another one.");
+        }
+
+        if (!password.equals(confirmationPassword)) {
+            throw new IllegalArgumentException("Password and confirmation password doesn't match.");
+        }
+        return true;
     }
 
 
