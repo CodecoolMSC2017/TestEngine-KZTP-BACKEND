@@ -75,4 +75,15 @@ public final class UserService {
         return true;
     }
 
+
+    public boolean isAdmin(int id) {
+        User user = userRepository.findById(id);
+        if (user.getAuthorities().contains("ADMIN_ROLE")) {
+            return true;
+        }
+
+        return false;
+    }
+
+
 }
