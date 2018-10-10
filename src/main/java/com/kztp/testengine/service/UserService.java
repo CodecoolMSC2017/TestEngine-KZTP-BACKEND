@@ -38,7 +38,11 @@ public final class UserService {
         return userRepository.findAll(pageable);
     }
 
-    public void createUser(String email,String username,String password) {
+    public User createUser(String email,String username,String password,String confirmationPassword) {
+        if(password.length() < 8 ) {
+            throw new IllegalArgumentException("Password is too short.Enter minimum 8 characters");
+        }
+
         if (isEmailTaken(email)) {
             throw new IllegalArgumentException("This email address already exists, please choose another one!");
         }
@@ -51,10 +55,15 @@ public final class UserService {
             throw new IllegalArgumentException("This username is already taken,please choose another one.");
         }
 
+        if (!password.equals(confirmationPassword)) {
+            throw new IllegalArgumentException("Password and confirmation password doesn't match.");
+        }
+
         userDetailsManager.createUser(new org.springframework.security.core.userdetails.User(
                 email,
                 pwEncoder.encode(password),
                 AuthorityUtils.createAuthorityList("USER_ROLE")));
+        return userRepository.findByUsername(username);
     }
 
     public void changePassword(int userId,String oldPassword, String newPassword) {
