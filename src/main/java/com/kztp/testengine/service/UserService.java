@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 
+import javax.naming.InvalidNameException;
+
 @Component
 public final class UserService {
 
@@ -28,7 +30,10 @@ public final class UserService {
         return userRepository.findById(id);
     }
 
-    public User getUserByUsername(String username) {
+    public User getUserByUsername(String username) throws IllegalArgumentException {
+        if (!userDetailsManager.userExists(username)) {
+            throw new IllegalArgumentException("There is no user with this name.");
+        }
         return userRepository.findByUsername(username);
     }
 
@@ -93,7 +98,7 @@ public final class UserService {
     }
 
 
-    private boolean isEveryInputValid(String email,String username,String password,String confirmationPassword) {
+    private boolean isEveryInputValid(String email,String username,String password,String confirmationPassword) throws IllegalArgumentException {
         if(password.length() < 8 ) {
             throw new IllegalArgumentException("Password is too short.Enter minimum 8 characters");
         }
