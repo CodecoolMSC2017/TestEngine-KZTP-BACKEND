@@ -2,9 +2,10 @@ package com.kztp.testengine.service;
 
 import com.kztp.testengine.model.Choice;
 import com.kztp.testengine.model.Question;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import com.kztp.testengine.model.Test;
+import org.springframework.stereotype.Component;
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -16,16 +17,17 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public final class XMLService {
-    private List<Question> questions;
 
-    public XMLService(List<Question> questions) {
-        this.questions = questions;
+    public XMLService() {
     }
 
-    private void createXml(int maxPoints,String filename) {
+    public void createXml(int maxPoints,String filename,List<Question> questions) {
         try {
 
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -47,7 +49,7 @@ public final class XMLService {
                 //Question Tag
                 Element questionEl = doc.createElement("question");
                 rootElement.appendChild(questionEl);
-                //QeuestionText element
+                //QuestionText element
                 Element questionText = doc.createElement("text");
                 questionEl.appendChild(questionText);
                 questionText.appendChild(doc.createTextNode(questions.get(i).getText()));
@@ -86,4 +88,61 @@ public final class XMLService {
             e.printStackTrace();
         }
     }
+
+    public List<Question> readXml(String path) {
+        File xmlFile = new File(path + ".xml");
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder;
+
+        List<Question> questionList= new ArrayList<>();
+        try {
+            dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(xmlFile);
+            doc.getDocumentElement().normalize();
+
+
+            NodeList questions = doc.getElementsByTagName("question");
+            for (int i = 0;i < questions.getLength();i++) {
+                questionList.add(getQuestion(questions.item(i)));
+            }
+
+
+        } catch (SAXException | ParserConfigurationException | IOException e1) {
+            e1.printStackTrace();
+        }
+
+
+        return questionList;
+    }
+
+    private Question getQuestion(Node node) {
+        if(node.getNodeType() == Node.ELEMENT_NODE) {
+            Element element = (Element) node;
+
+            String text = element.getElementsByTagName("text").item(0).getFirstChild().getTextContent();
+            int id =Integer.parseInt(element.getElementsByTagName("id").item(0).getFirstChild().getTextContent());
+            List<Choice> choiceList = new ArrayList<>();
+            Choice answer = new Choice(element.getElementsByTagName("answer").item(0).getFirstChild().getTextContent());
+
+            NodeList choices = element.getElementsByTagName("choices").item(0).getChildNodes();
+            for (int j = 0;j< choices.getLength();j++) {
+                choiceList.add(getChoice(choices.item(j)));
+            }
+
+
+            return new Question(id,text,choiceList,answer);
+        }
+        return null;
+
+    }
+
+    private Choice getChoice(Node node) {
+        if(node.getNodeType() == Node.ELEMENT_NODE) {
+            Element element = (Element) node;
+
+            return new Choice(element.getFirstChild().getTextContent());
+        }
+        return null;
+    }
+
 }
