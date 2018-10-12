@@ -4,6 +4,7 @@ import com.kztp.testengine.exception.InvalidUploadTypeException;
 import com.kztp.testengine.model.Choice;
 import com.kztp.testengine.model.Question;
 import com.kztp.testengine.model.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -34,10 +35,13 @@ public final class XMLService {
     @Value("${upload.path}")
     private String path;
 
+    @Autowired
+    private TestService testService;
+
     public XMLService() {
     }
 
-    public void createXml(int maxPoints,List<Question> questions) {
+    public String createXml(int maxPoints,List<Question> questions) {
         try {
 
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -94,10 +98,12 @@ public final class XMLService {
             StreamResult result = new StreamResult(new File(filename+".xml"));
 
             transformer.transform(source, result);
+            return filename;
 
         } catch (ParserConfigurationException | TransformerException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public List<Question> readXml(String path) {
@@ -156,7 +162,7 @@ public final class XMLService {
         return null;
     }
 
-    public Map<String,Boolean> uploadXml(MultipartFile file) throws IOException, InvalidUploadTypeException {
+    public Map<String,Boolean> uploadXml(String title, String description, int price, int maxpoints,MultipartFile file) throws IOException, InvalidUploadTypeException {
         Path directory = Paths.get(path);
         String fullPath = path;
 
@@ -170,18 +176,42 @@ public final class XMLService {
         if (!Files.exists(directory)) {
             new File(fullPath).mkdirs();
         }
-        String uuid = UUID.randomUUID().toString().replace("-", "");
+        String filename = UUID.randomUUID().toString().replace("-", "");
 
 
-        File uploadedFile = new File(fullPath, uuid);
+        File uploadedFile = new File(fullPath, filename);
         uploadedFile.createNewFile();
         FileOutputStream fileOutputStream = new FileOutputStream(uploadedFile);
         fileOutputStream.write(file.getBytes());
         fileOutputStream.close();
 
         Map<String,Boolean> status = new HashMap<>();
-        status.put("status",true);
+        if(xmlValidator(filename)) {
+            status.put("status",true);
+            testService.createTestFromUploadedXml(filename,title,description,price,maxpoints);
+        }
+        status.put("status",false);
+
+
         return status;
+    }
+
+    private boolean xmlValidator(String path) {
+        List<Question> questions = readXml(path);
+        if(questions.size() == 0 ){
+            return false;
+        }
+        for(Question question : questions) {
+            if (question.getText() == null || question.getAnswer() == null || question.getChoices().size() == 0 ) {
+                return false;
+            }
+            for(Choice choice : question.getChoices()) {
+                if(choice.getText() == null || choice.getText().length() < 1) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 }
