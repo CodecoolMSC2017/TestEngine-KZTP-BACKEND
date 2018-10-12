@@ -1,9 +1,13 @@
 package com.kztp.testengine.service;
 
+import com.kztp.testengine.exception.InvalidUploadTypeException;
 import com.kztp.testengine.model.Choice;
 import com.kztp.testengine.model.Question;
 import com.kztp.testengine.model.Test;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -17,17 +21,23 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 @Component
 public final class XMLService {
 
+    @Value("${upload.path}")
+    private String path;
+
     public XMLService() {
     }
 
-    public void createXml(int maxPoints,String filename,List<Question> questions) {
+    public void createXml(int maxPoints,List<Question> questions) {
         try {
 
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -77,6 +87,7 @@ public final class XMLService {
             }
 
             // XML to file
+            String filename = UUID.randomUUID().toString().replace("-", "");
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
@@ -143,6 +154,34 @@ public final class XMLService {
             return new Choice(element.getFirstChild().getTextContent());
         }
         return null;
+    }
+
+    public Map<String,Boolean> uploadXml(MultipartFile file) throws IOException, InvalidUploadTypeException {
+        Path directory = Paths.get(path);
+        String fullPath = path;
+
+        if(file == null){
+            throw new InvalidUploadTypeException("Empty file error.");
+        }
+        if (!file.getContentType().equals("xml")) {
+            throw new InvalidUploadTypeException("Only xml files are allowed!");
+        }
+
+        if (!Files.exists(directory)) {
+            new File(fullPath).mkdirs();
+        }
+        String uuid = UUID.randomUUID().toString().replace("-", "");
+
+
+        File uploadedFile = new File(fullPath, uuid);
+        uploadedFile.createNewFile();
+        FileOutputStream fileOutputStream = new FileOutputStream(uploadedFile);
+        fileOutputStream.write(file.getBytes());
+        fileOutputStream.close();
+
+        Map<String,Boolean> status = new HashMap<>();
+        status.put("status",true);
+        return status;
     }
 
 }
