@@ -15,9 +15,9 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("")
+    @PostMapping("")
     public User get(Principal principal) {
-        return userService.getUserByEmail(principal.getName());
+        return userService.getUserByUsername(principal.getName());
     }
 
     @DeleteMapping("")
