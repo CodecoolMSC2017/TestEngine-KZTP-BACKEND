@@ -36,6 +36,8 @@ DROP TABLE IF EXISTS Testratings;
 
 CREATE TABLE Tests (
 	id serial NOT NULL,
+	title VARCHAR(255) NOT NULL,
+	description VARCHAR(255) NOT NULL,
 	path VARCHAR(255) NOT NULL UNIQUE,
 	price integer NOT NULL,
 	max_points integer NOT NULL,
