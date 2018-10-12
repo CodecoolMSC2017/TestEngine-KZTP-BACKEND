@@ -31,10 +31,17 @@ public final class UserService {
     }
 
     public User getUserByUsername(String username) throws IllegalArgumentException {
-        if (!userDetailsManager.userExists(username)) {
+       /* if (!userDetailsManager.userExists(username)) {
             throw new IllegalArgumentException("There is no user with this name.");
         }
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsername(username);*/
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
+            throw new IllegalArgumentException(username + " does not found!");
+        }
+
+        return user;
     }
 
     public User getUserByEmail(String email) {
