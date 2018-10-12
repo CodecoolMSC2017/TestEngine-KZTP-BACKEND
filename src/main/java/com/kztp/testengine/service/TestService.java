@@ -34,9 +34,11 @@ public final class TestService {
         return testRepository.save(test);
     }
 
-    public Test createTest(String fileName, int price, int maxPoints, List<Question> questions) {
-        xmlService.createXml(maxPoints,fileName,questions);
+    public Test createTest(String title,String description,String fileName, int price, int maxPoints, List<Question> questions) {
+        xmlService.createXml(maxPoints,questions);
         Test test = new Test();
+        test.setTitle(title);
+        test.setDescriptiom(description);
         test.setPath(fileName);
         test.setPrice(price);
         test.setMaxPoints(maxPoints);
