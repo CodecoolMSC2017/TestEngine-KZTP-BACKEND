@@ -30,7 +30,7 @@ public final class TestService {
     }
 
     public Page<Test> findAll(Pageable pageable) {
-        return testRepository.findAll(pageable);
+        return testRepository.findByLiveTrue(pageable);
     }
 
     private Test addTestToDatabase(Test test){
