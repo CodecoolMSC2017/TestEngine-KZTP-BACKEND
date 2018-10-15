@@ -1,7 +1,6 @@
 package com.kztp.testengine.service;
 
-import com.kztp.testengine.model.Question;
-import com.kztp.testengine.model.Test;
+import com.kztp.testengine.model.*;
 import com.kztp.testengine.repository.TestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 public final class TestService {
@@ -21,6 +21,9 @@ public final class TestService {
 
     @Autowired
     private XMLService xmlService;
+
+    @Autowired
+    private UsersTestService usersTestService;
 
     public Test getTestById(int id){
         return testRepository.findById(id);
@@ -57,5 +60,24 @@ public final class TestService {
         test.setCreator(userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()));
         addTestToDatabase(test);
         return test;
+    }
+
+    //User user, Test test,int maxPoints,int actualPoints,int percentage
+
+    public int takeTest(UserSolution userSolution) {
+        User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        int actualPoints = 0;
+        Test test =getTestById(userSolution.getTestId());
+        List<Question> questions=xmlService.readXml(test.getPath());
+        List<String> solutions = userSolution.getSolutions();
+        for(int i = 0;i < questions.size();i++) {
+            if(questions.get(i).getAnswer().getText().equals(solutions.get(i))) {
+                actualPoints++;
+            }
+        }
+        int percentage = test.getMaxPoints()/actualPoints;
+
+        usersTestService.createUsersTest(user,test,test.getMaxPoints(),actualPoints,percentage);
+        return percentage;
     }
 }
