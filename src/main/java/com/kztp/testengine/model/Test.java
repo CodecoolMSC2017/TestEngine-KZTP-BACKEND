@@ -13,7 +13,7 @@ public class Test {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String title;
-    private String descriptiom;
+    private String description;
     private String path;
     private int price;
     @Column(name = "max_points")
@@ -52,12 +52,12 @@ public class Test {
         this.title = title;
     }
 
-    public String getDescriptiom() {
-        return descriptiom;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescriptiom(String descriptiom) {
-        this.descriptiom = descriptiom;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getPath() {
