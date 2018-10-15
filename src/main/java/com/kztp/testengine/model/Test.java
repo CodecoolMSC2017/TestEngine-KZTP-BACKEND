@@ -27,6 +27,7 @@ public class Test {
     private User creator;
     private boolean enabled;
     private String type;
+    private boolean live;
 
     @OneToMany(mappedBy = "test")
     private List<PoolPoints> poolPoints = new ArrayList<>();
@@ -110,6 +111,14 @@ public class Test {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public boolean isLive() {
+        return live;
+    }
+
+    public void setLive(boolean live) {
+        this.live = live;
     }
 
     public List<PoolPoints> getPoolPoints() {
