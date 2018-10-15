@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/test")
 public class TestController {
     private final int PAGESIZE = 10;
     @Autowired
@@ -28,15 +27,19 @@ public class TestController {
     @Autowired
     private XMLService xmlService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/test/{id}")
     public Test getTestById(@PathVariable("id")int id){
         return testService.getTestById(id);
     }
-    @GetMapping("/all")
+    @GetMapping("/test/all")
     public Page<Test> getAllTest(@RequestParam("page") int pageNumber){
         return testService.findAll(PageRequest.of(pageNumber,PAGESIZE,Sort.Direction.ASC,"type"));
     }
-    @PostMapping("/newtest")
+    @GetMapping("/user/test/pool")
+    public Page<Test> getPoolTests(@RequestParam("page") int pageNumber) {
+        return testService.findAllPoolTest(PageRequest.of(pageNumber,PAGESIZE,Sort.Direction.ASC,"type"));
+    }
+    @PostMapping("/user/test/newtest")
     public Test createTest(@RequestBody Map<String, Object> map) {
         String title = (String) map.get("title");
         String description = (String) map.get("description");
@@ -46,12 +49,12 @@ public class TestController {
         return testService.createTest(title,description,price,maxPoints,questions);
     }
 
-    @PostMapping("/xmlupload")
+    @PostMapping("/user/test/xmlupload")
     public Map<String,Boolean> uploadXml(@RequestParam("file") MultipartFile file, String title, String description, int price, int maxpoints ) throws IOException, InvalidUploadTypeException {
         return xmlService.uploadXml(title,description,price,maxpoints,file);
     }
 
-    @PostMapping("/taketest")
+    @PostMapping("/user/test/taketest")
     public int takeTest(@RequestBody UserSolution userSolution) {
         return testService.takeTest(userSolution);
     }

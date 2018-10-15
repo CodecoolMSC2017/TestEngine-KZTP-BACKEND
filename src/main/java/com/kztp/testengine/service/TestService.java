@@ -33,6 +33,10 @@ public final class TestService {
         return testRepository.findByLiveTrue(pageable);
     }
 
+    public Page<Test> findAllPoolTest(Pageable pageable) {
+        return testRepository.findByLiveFalse(pageable);
+    }
+
     private Test addTestToDatabase(Test test){
         return testRepository.save(test);
     }
