@@ -3,6 +3,7 @@ package com.kztp.testengine.model;
 import javax.persistence.*;
 
 @Entity
+@Table(name ="Testratings")
 public class TestRatings {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

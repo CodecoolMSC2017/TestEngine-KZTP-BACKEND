@@ -1,5 +1,8 @@
 package com.kztp.testengine.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,6 +19,7 @@ public class User implements Serializable {
     private String rank;
     private boolean enabled;
     @OneToMany(mappedBy = "creator")
+    @JsonBackReference
     private List<Test> tests = new ArrayList<>();
 
     @ElementCollection
@@ -27,6 +31,7 @@ public class User implements Serializable {
     private List<String> authorities;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<UsersTest> usersTest = new ArrayList<>();
 
 

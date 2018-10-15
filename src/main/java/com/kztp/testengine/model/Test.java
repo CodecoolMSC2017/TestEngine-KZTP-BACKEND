@@ -1,5 +1,8 @@
 package com.kztp.testengine.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.Id;
 
 import javax.persistence.*;
@@ -19,6 +22,7 @@ public class Test {
     @Column(name = "max_points")
     private int maxPoints;
     @ManyToOne
+    @JsonManagedReference
     @JoinColumn(name = "creator", referencedColumnName = "id")
     private User creator;
     private boolean enabled;
