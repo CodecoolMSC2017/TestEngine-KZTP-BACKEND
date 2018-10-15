@@ -55,11 +55,15 @@ public final class UserService {
     public User createUser(String email,String username,String password,String confirmationPassword) {
         if(isEveryInputValid(email,username,password,confirmationPassword)) {
             userDetailsManager.createUser(new org.springframework.security.core.userdetails.User(
-                    email,
+                    username,
                     pwEncoder.encode(password),
                     AuthorityUtils.createAuthorityList("USER_ROLE")));
         }
-        return userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username);
+        user.setEmail(email);
+        user.setRank("newbie");
+        userRepository.save(user);
+        return user;
     }
 
     public User createAdmin(String username,String email,String password,String confirmationPassword) throws UnauthorizedRequestException {
@@ -67,10 +71,14 @@ public final class UserService {
         if(currentUser.getAuthorities().contains("ADMIN_ROLE")) {
             if (isEveryInputValid(email, username, password, confirmationPassword)) {
                 userDetailsManager.createUser(new org.springframework.security.core.userdetails.User(
-                        email,
+                        username,
                         pwEncoder.encode(password),
                         AuthorityUtils.createAuthorityList("ADMIN_ROLE")));
             }
+            User user = userRepository.findByUsername(username);
+            user.setEmail(email);
+            user.setRank("elite");
+            userRepository.save(user);
         }else {
             throw new UnauthorizedRequestException("You don't have the authority for this action.");
         }
@@ -108,6 +116,10 @@ public final class UserService {
     private boolean isEveryInputValid(String email,String username,String password,String confirmationPassword) throws IllegalArgumentException {
         if(password.length() < 8 ) {
             throw new IllegalArgumentException("Password is too short.Enter minimum 8 characters");
+        }
+
+        if(email.length() == 0 || !email.contains("@")) {
+            throw new IllegalArgumentException("Email is null or invalid.");
         }
 
         if (isEmailTaken(email)) {
