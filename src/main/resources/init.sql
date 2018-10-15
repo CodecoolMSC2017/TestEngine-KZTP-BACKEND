@@ -44,6 +44,7 @@ CREATE TABLE Tests (
 	creator integer NOT NULL,
 	enabled BOOLEAN NOT NULL,
 	type VARCHAR(255) NOT NULL,
+	live BOOLEAN DEFAULT false;
 	CONSTRAINT Tests_pk PRIMARY KEY (id)
 ) WITH (
   OIDS=FALSE
