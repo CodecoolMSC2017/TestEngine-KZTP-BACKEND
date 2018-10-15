@@ -21,7 +21,7 @@ public class RegisterController {
         String email = map.get("email");
         String username = map.get("username");
         String password = map.get("password");
-        String confirmationPassword = map.get("confirmationpassword");
+        String confirmationPassword = map.get("confirmationPassword");
         return userService.createUser(email,username,password,confirmationPassword);
     }
 
@@ -30,7 +30,7 @@ public class RegisterController {
         String email = map.get("email");
         String username = map.get("username");
         String password = map.get("password");
-        String confirmationPassword = map.get("confirmationpassword");
+        String confirmationPassword = map.get("confirmationPassword");
         return userService.createAdmin(email,username,password,confirmationPassword);
     }
 }
