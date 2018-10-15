@@ -57,7 +57,7 @@ public final class UserService {
             userDetailsManager.createUser(new org.springframework.security.core.userdetails.User(
                     username,
                     pwEncoder.encode(password),
-                    AuthorityUtils.createAuthorityList("USER_ROLE")));
+                    AuthorityUtils.createAuthorityList("ROLE_USER")));
         }
         User user = userRepository.findByUsername(username);
         user.setEmail(email);
@@ -68,7 +68,7 @@ public final class UserService {
 
     public User createAdmin(String username,String email,String password,String confirmationPassword) throws UnauthorizedRequestException {
         User currentUser = getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        if(currentUser.getAuthorities().contains("ADMIN_ROLE")) {
+        if(currentUser.getAuthorities().contains("ROLE_ADMIN")) {
             if (isEveryInputValid(email, username, password, confirmationPassword)) {
                 userDetailsManager.createUser(new org.springframework.security.core.userdetails.User(
                         username,
