@@ -1,6 +1,7 @@
 package com.kztp.testengine.service;
 
 import com.kztp.testengine.exception.UnauthorizedRequestException;
+import com.kztp.testengine.exception.UserException;
 import com.kztp.testengine.model.User;
 import com.kztp.testengine.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,6 +139,21 @@ public final class UserService {
             throw new IllegalArgumentException("Password and confirmation password doesn't match.");
         }
         return true;
+    }
+
+    public void rankUpUser(User user) throws UserException {
+        if(user.getRank().equals("elite")) {
+            throw new UserException("Your rank is already elite,can't get higher rank.");
+        }
+        if(user.getRank().equals("user")) {
+            user.setRank("elite");
+            userRepository.save(user);
+        }
+        if (user.getRank().equals("newbie")) {
+            user.setRank("user");
+            userRepository.save(user);
+        }
+
     }
 
 
