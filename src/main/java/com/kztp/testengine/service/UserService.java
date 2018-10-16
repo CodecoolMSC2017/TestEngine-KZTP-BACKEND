@@ -45,6 +45,10 @@ public final class UserService {
         return user;
     }
 
+    public boolean userExists(String username) {
+        return userDetailsManager.userExists(username);
+    }
+
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
