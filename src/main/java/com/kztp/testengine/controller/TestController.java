@@ -43,7 +43,7 @@ public class TestController {
         return testService.findAllPoolTest(PageRequest.of(pageNumber,PAGESIZE,Sort.Direction.ASC,"type"));
     }
     @PostMapping("/user/test/newtest")
-    public Test createTest(@RequestBody NewTest newTest) {
+    public Test createTest(@RequestBody NewTest newTest) throws UnauthorizedRequestException {
         String title = newTest.getTitle();
         String description = newTest.getDescription();
         int price =newTest.getPrice();
@@ -54,8 +54,8 @@ public class TestController {
     }
 
     @PostMapping("/user/test/xmlupload")
-    public Map<String,Boolean> uploadXml(@RequestParam("file") MultipartFile file, String title, String description, int price, int maxpoints ) throws IOException, InvalidUploadTypeException {
-        return xmlService.uploadXml(title,description,price,maxpoints,file);
+    public Map<String,Boolean> uploadXml(@RequestParam("file") MultipartFile file, String title, String description, int price, int maxpoints, String type ) throws IOException, InvalidUploadTypeException, UnauthorizedRequestException {
+        return xmlService.uploadXml(title,description,price,maxpoints,type,file);
     }
 
     @PostMapping("/user/test/taketest")

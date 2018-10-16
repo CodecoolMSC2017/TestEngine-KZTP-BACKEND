@@ -1,6 +1,7 @@
 package com.kztp.testengine.service;
 
 import com.kztp.testengine.exception.InvalidUploadTypeException;
+import com.kztp.testengine.exception.UnauthorizedRequestException;
 import com.kztp.testengine.model.Choice;
 import com.kztp.testengine.model.Question;
 import com.kztp.testengine.model.Test;
@@ -162,7 +163,7 @@ public final class XMLService {
         return null;
     }
 
-    public Map<String,Boolean> uploadXml(String title, String description, int price, int maxpoints,MultipartFile file) throws IOException, InvalidUploadTypeException {
+    public Map<String,Boolean> uploadXml(String title, String description, int price, int maxpoints,String type,MultipartFile file) throws IOException, InvalidUploadTypeException, UnauthorizedRequestException {
         Path directory = Paths.get(path);
         String fullPath = path;
 
@@ -188,7 +189,7 @@ public final class XMLService {
         Map<String,Boolean> status = new HashMap<>();
         if(xmlValidator(filename)) {
             status.put("status",true);
-            testService.createTestFromUploadedXml(filename,title,description,price,maxpoints);
+            testService.createTestFromUploadedXml(filename,title,description,price,maxpoints,type);
         }
         status.put("status",false);
 
