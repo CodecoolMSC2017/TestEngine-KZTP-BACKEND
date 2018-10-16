@@ -8,6 +8,9 @@ public class Question {
     private List<Choice> choices;
     private Choice answer;
 
+    public Question() {
+    }
+
     public Question(int id, String text, List<Choice> choices, Choice answer) {
         this.id = id;
         this.text = text;

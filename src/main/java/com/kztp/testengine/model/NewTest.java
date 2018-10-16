@@ -9,6 +9,9 @@ public class NewTest {
     private int maxPoints;
     private List<Question> questions;
 
+    public NewTest() {
+    }
+
     public NewTest(String title, String description, int price, int maxPoints, List<Question> questions) {
         this.title = title;
         this.description = description;
