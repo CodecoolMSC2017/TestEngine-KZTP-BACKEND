@@ -60,4 +60,9 @@ public class TestController {
     public int takeTest(@RequestBody UserSolution userSolution) throws UserException {
         return testService.takeTest(userSolution);
     }
+
+    @GetMapping("/user/tests/{username}")
+    public List<Test> getLiveTestsByUser(@PathVariable("username") String username) {
+        return testService.findAllLiveByUserName(username);
+    }
 }
