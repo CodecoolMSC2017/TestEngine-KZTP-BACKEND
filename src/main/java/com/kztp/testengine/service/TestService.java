@@ -60,7 +60,7 @@ public final class TestService {
         return testRepository.save(test);
     }
 
-    public Test createTest(String title,String description, int price, int maxPoints, List<Question> questions) {
+    public Test createTest(String title,String description, int price, int maxPoints, String type, List<Question> questions) {
         String fileName = xmlService.createXml(maxPoints,questions);
         Test test = new Test();
         test.setTitle(title);
@@ -68,6 +68,7 @@ public final class TestService {
         test.setPath(fileName);
         test.setPrice(price);
         test.setMaxPoints(maxPoints);
+        test.setType(type);
         test.setCreator(userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()));
         addTestToDatabase(test);
         return test;

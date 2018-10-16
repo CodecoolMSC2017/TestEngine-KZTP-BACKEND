@@ -7,16 +7,18 @@ public class NewTest {
     private String description;
     private int price;
     private int maxPoints;
+    private String type;
     private List<Question> questions;
 
     public NewTest() {
     }
 
-    public NewTest(String title, String description, int price, int maxPoints, List<Question> questions) {
+    public NewTest(String title, String description, int price, int maxPoints,String type, List<Question> questions) {
         this.title = title;
         this.description = description;
         this.price = price;
         this.maxPoints = maxPoints;
+        this.type = type;
         this.questions = questions;
     }
 
@@ -50,6 +52,14 @@ public class NewTest {
 
     public void setMaxPoints(int maxPoints) {
         this.maxPoints = maxPoints;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public List<Question> getQuestions() {

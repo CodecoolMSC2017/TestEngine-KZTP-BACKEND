@@ -48,8 +48,9 @@ public class TestController {
         String description = newTest.getDescription();
         int price =newTest.getPrice();
         int maxPoints = newTest.getMaxPoints();
+        String type = newTest.getType();
         List<Question> questions = newTest.getQuestions();
-        return testService.createTest(title,description,price,maxPoints,questions);
+        return testService.createTest(title,description,price,maxPoints,type,questions);
     }
 
     @PostMapping("/user/test/xmlupload")
