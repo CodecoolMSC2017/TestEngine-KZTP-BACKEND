@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public final class PoolPointService {
 
@@ -62,5 +64,16 @@ public final class PoolPointService {
                 poolPointRepository.save(poolPoint);
             }
         }
+        checkPoolPointsLive(test);
+
     }
+
+    private void checkPoolPointsLive(Test test) {
+        int positive =poolPointRepository.getAllByTestAndVote(test,VoteEnum.VOTE_POSITIVE.getValue()).size();
+        int negative = poolPointRepository.getAllByTestAndVote(test,VoteEnum.VOTE_NEGATIVE.getValue()).size();
+        if(positive-negative >= 50) {
+            testService.setLive(test);
+        }
+    }
+
 }
