@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name ="Testratings")
-public class TestRatings {
+public class TestRating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -16,7 +16,7 @@ public class TestRatings {
     private Test test;
     private Integer vote;
 
-    public TestRatings() {
+    public TestRating() {
     }
 
     public Integer getId() {

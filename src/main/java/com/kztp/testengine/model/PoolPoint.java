@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "Poolpoints")
-public class PoolPoints {
+public class PoolPoint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -16,7 +16,7 @@ public class PoolPoints {
     private Test test;
     private Integer vote;
 
-    public PoolPoints() {
+    public PoolPoint() {
     }
 
     public Integer getId() {
