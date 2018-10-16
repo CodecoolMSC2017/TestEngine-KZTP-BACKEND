@@ -135,4 +135,9 @@ public final class TestService {
             }
         }
     }
+
+    public void setLive(Test test) {
+        test.setLive(true);
+        testRepository.save(test);
+    }
 }
