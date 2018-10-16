@@ -3,6 +3,7 @@ package com.kztp.testengine.controller;
 import com.kztp.testengine.exception.InvalidUploadTypeException;
 import com.kztp.testengine.exception.UnauthorizedRequestException;
 import com.kztp.testengine.exception.UserException;
+import com.kztp.testengine.model.NewTest;
 import com.kztp.testengine.model.Question;
 import com.kztp.testengine.model.Test;
 import com.kztp.testengine.model.UserSolution;
@@ -42,12 +43,12 @@ public class TestController {
         return testService.findAllPoolTest(PageRequest.of(pageNumber,PAGESIZE,Sort.Direction.ASC,"type"));
     }
     @PostMapping("/user/test/newtest")
-    public Test createTest(@RequestBody Map<String, Object> map) {
-        String title = (String) map.get("title");
-        String description = (String) map.get("description");
-        int price = (Integer) map.get("price");
-        int maxPoints = (Integer) map.get("maxpoints");
-        List<Question> questions = (List<Question>) map.get("questions");
+    public Test createTest(@RequestBody NewTest newTest) {
+        String title = newTest.getTitle();
+        String description = newTest.getDescription();
+        int price =newTest.getPrice();
+        int maxPoints = newTest.getMaxPoints();
+        List<Question> questions = newTest.getQuestions();
         return testService.createTest(title,description,price,maxPoints,questions);
     }
 
