@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.AccessDeniedException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +43,17 @@ public final class TestService {
             throw new UnauthorizedRequestException("Your rank is too low to see this page.");
         }
         return testRepository.findByLiveFalse(pageable);
+    }
+
+    public List<Test> findAllLiveByUserName(String userName) {
+        List<Test> tests;
+        if (userService.userExists(userName)) {
+            User user = userService.getUserByUsername(userName);
+            tests = testRepository.findByCreatorAndLiveTrue(user);
+        } else {
+            throw new IllegalArgumentException("No user with this name.");
+        }
+        return tests;
     }
 
     private Test addTestToDatabase(Test test){
