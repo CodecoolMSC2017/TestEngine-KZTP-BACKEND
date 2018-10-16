@@ -1,6 +1,8 @@
 package com.kztp.testengine.controller;
 
 import com.kztp.testengine.exception.InvalidUploadTypeException;
+import com.kztp.testengine.exception.UnauthorizedRequestException;
+import com.kztp.testengine.exception.UserException;
 import com.kztp.testengine.model.Question;
 import com.kztp.testengine.model.Test;
 import com.kztp.testengine.model.UserSolution;
@@ -36,7 +38,7 @@ public class TestController {
         return testService.findAll(PageRequest.of(pageNumber,PAGESIZE,Sort.Direction.ASC,"type"));
     }
     @GetMapping("/user/test/pool")
-    public Page<Test> getPoolTests(@RequestParam("page") int pageNumber) {
+    public Page<Test> getPoolTests(@RequestParam("page") int pageNumber) throws UnauthorizedRequestException {
         return testService.findAllPoolTest(PageRequest.of(pageNumber,PAGESIZE,Sort.Direction.ASC,"type"));
     }
     @PostMapping("/user/test/newtest")
@@ -55,7 +57,7 @@ public class TestController {
     }
 
     @PostMapping("/user/test/taketest")
-    public int takeTest(@RequestBody UserSolution userSolution) {
+    public int takeTest(@RequestBody UserSolution userSolution) throws UserException {
         return testService.takeTest(userSolution);
     }
 }
