@@ -1,5 +1,7 @@
 package com.kztp.testengine.service;
 
+import com.kztp.testengine.exception.UnauthorizedRequestException;
+import com.kztp.testengine.exception.UserException;
 import com.kztp.testengine.model.*;
 import com.kztp.testengine.repository.TestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +36,11 @@ public final class TestService {
         return testRepository.findByLiveTrue(pageable);
     }
 
-    public Page<Test> findAllPoolTest(Pageable pageable) {
+    public Page<Test> findAllPoolTest(Pageable pageable) throws UnauthorizedRequestException {
+        User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (user.getRank().equals("newbie")) {
+            throw new UnauthorizedRequestException("Your rank is too low to see this page.");
+        }
         return testRepository.findByLiveFalse(pageable);
     }
 
@@ -68,7 +75,7 @@ public final class TestService {
 
     //User user, Test test,int maxPoints,int actualPoints,int percentage
 
-    public int takeTest(UserSolution userSolution) {
+    public int takeTest(UserSolution userSolution) throws UserException {
         User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         int actualPoints = 0;
         Test test =getTestById(userSolution.getTestId());
@@ -82,6 +89,38 @@ public final class TestService {
         int percentage = test.getMaxPoints()/actualPoints;
 
         usersTestService.createUsersTest(user,test,test.getMaxPoints(),actualPoints,percentage);
+        if (!user.getRank().equals("elite")) {
+            List<UsersTest> usersTest = usersTestService.getCompletedTestsByUser(user);
+            checkRank(user,usersTest);
+        }
         return percentage;
+    }
+
+    private void checkRank(User user,List<UsersTest> tests) throws UserException {
+        int testCount =0;
+        if (user.getRank().equals("user")) { //100test 70%
+            int testAbove70Count =0;
+            for (UsersTest test:tests) {
+                testCount++;
+                if(test.getPercetage() >= 70) {
+                    testAbove70Count++;
+                }
+            }
+            if(testCount >= 100 && testAbove70Count >= 100){
+                userService.rankUpUser(user);
+            }
+        }
+        else if (user.getRank().equals("newbie")) { //15test 50%
+            int testAbove50Count =0;
+            for (UsersTest test:tests) {
+                testCount++;
+                if(test.getPercetage() >= 50) {
+                    testAbove50Count++;
+                }
+            }
+            if(testCount >= 15 && testAbove50Count >= 15) {
+                userService.rankUpUser(user);
+            }
+        }
     }
 }
