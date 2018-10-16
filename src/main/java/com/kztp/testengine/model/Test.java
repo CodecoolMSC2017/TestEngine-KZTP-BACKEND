@@ -1,6 +1,5 @@
 package com.kztp.testengine.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.Id;
@@ -30,10 +29,10 @@ public class Test {
     private boolean live;
 
     @OneToMany(mappedBy = "test")
-    private List<PoolPoints> poolPoints = new ArrayList<>();
+    private List<PoolPoint> poolPoints = new ArrayList<>();
 
     @OneToMany(mappedBy = "test")
-    private List<TestRatings> testRatings = new ArrayList<>();
+    private List<TestRating> testRatings = new ArrayList<>();
 
     @OneToMany(mappedBy = "test")
     private List<UsersTest> usersTests = new ArrayList<>();
@@ -121,19 +120,19 @@ public class Test {
         this.live = live;
     }
 
-    public List<PoolPoints> getPoolPoints() {
+    public List<PoolPoint> getPoolPoints() {
         return poolPoints;
     }
 
-    public void setPoolPoints(List<PoolPoints> poolPoints) {
+    public void setPoolPoints(List<PoolPoint> poolPoints) {
         this.poolPoints = poolPoints;
     }
 
-    public List<TestRatings> getTestRatings() {
+    public List<TestRating> getTestRatings() {
         return testRatings;
     }
 
-    public void setTestRatings(List<TestRatings> testRatings) {
+    public void setTestRatings(List<TestRating> testRatings) {
         this.testRatings = testRatings;
     }
 
