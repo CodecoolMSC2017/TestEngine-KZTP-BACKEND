@@ -78,6 +78,7 @@ public final class PoolPointService {
         if(positive-negative >= 50) {
             testService.setLive(test);
         }
+        testService.setPoolRating(test,(positive-negative));
     }
 
 }

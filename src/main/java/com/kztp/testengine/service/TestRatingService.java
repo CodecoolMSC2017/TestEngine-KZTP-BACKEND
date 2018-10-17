@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class TestRatingService {
 
@@ -47,7 +49,19 @@ public class TestRatingService {
             testRating.setVote(vote);
             testRatingRepository.save(testRating);
         }
+        countRatings(test);
 
 
+    }
+
+    public void countRatings(Test test) {
+        List<TestRating> testRatings =testRatingRepository.findAllByTest(test);
+        float ratingSum =0;
+        float rating = 0;
+        for(TestRating testRating : testRatings) {
+            ratingSum += testRating.getVote();
+        }
+        rating = ratingSum/testRatings.size();
+        testService.setRating(test,rating);
     }
 }
