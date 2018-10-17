@@ -155,4 +155,14 @@ public final class TestService {
         test.setLive(true);
         testRepository.save(test);
     }
+
+    public void setRating(Test test,float rating) {
+        test.setRating(rating);
+        testRepository.save(test);
+    }
+
+    public void setPoolRating(Test test,int poolRating) {
+        test.setPoolRating(poolRating);
+        testRepository.save(test);
+    }
 }
