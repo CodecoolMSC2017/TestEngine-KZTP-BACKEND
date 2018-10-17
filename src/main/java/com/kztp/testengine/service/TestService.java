@@ -107,26 +107,26 @@ public final class TestService {
         int actualPoints = 0;
         Test test =getTestById(userSolution.getTestId());
         List<Question> questions=xmlService.readXml(test.getPath());
-        List<String> solutions = userSolution.getSolutions();
+        Map<Integer,String> solutions = userSolution.getSolutions();
         for(int i = 0;i < questions.size();i++) {
             if(questions.get(i).getAnswer().getText().equals(solutions.get(i))) {
                 actualPoints++;
             }
         }
-        int percentage;
+        float percentage;
         if (actualPoints == 0) {
             percentage = 0;
         }
         else {
-            percentage = (actualPoints / test.getMaxPoints())*100;
+            percentage = (actualPoints / (float)test.getMaxPoints())*100;
         }
 
-        usersTestService.createUsersTest(user,test,test.getMaxPoints(),actualPoints,percentage);
+        usersTestService.createUsersTest(user,test,test.getMaxPoints(),actualPoints,Math.round(percentage));
         if (!user.getRank().equals("elite")) {
             List<UsersTest> usersTest = usersTestService.getCompletedTestsByUser(user);
             checkRank(user,usersTest);
         }
-        return percentage;
+        return Math.round(percentage);
     }
 
     private void checkRank(User user,List<UsersTest> tests) throws UserException {

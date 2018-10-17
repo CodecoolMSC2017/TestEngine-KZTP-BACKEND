@@ -1,13 +1,16 @@
 package com.kztp.testengine.model;
 
-import java.util.List;
+import java.util.Map;
 
 public class UserSolution {
 
     private int testId;
-    private List<String> solutions;
+    private Map<Integer,String> solutions;
 
-    public UserSolution(int testId, List< String> solutions) {
+    public UserSolution() {
+    }
+
+    public UserSolution(int testId, Map<Integer,String> solutions) {
         this.testId = testId;
         this.solutions = solutions;
     }
@@ -20,11 +23,11 @@ public class UserSolution {
         this.testId = testId;
     }
 
-    public List<String> getSolutions() {
+    public Map<Integer,String> getSolutions() {
         return solutions;
     }
 
-    public void setSolutions(List<String> solutions) {
+    public void setSolutions(Map<Integer,String> solutions) {
         this.solutions = solutions;
     }
 }
