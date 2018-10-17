@@ -93,9 +93,16 @@ public final class TestService {
         return test;
     }
 
+    public List<Question> takeTest(int testId) {
+        User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Test test =testRepository.findById(testId);
+        return xmlService.readXml(test.getPath());
+
+    }
+
     //User user, Test test,int maxPoints,int actualPoints,int percentage
 
-    public int takeTest(UserSolution userSolution) throws UserException {
+    public int sendSolution(UserSolution userSolution) throws UserException {
         User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         int actualPoints = 0;
         Test test =getTestById(userSolution.getTestId());
