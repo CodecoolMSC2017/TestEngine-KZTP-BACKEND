@@ -58,13 +58,18 @@ public class TestController {
         return xmlService.uploadXml(title,description,price,maxpoints,type,file);
     }
 
-    @PostMapping("/user/test/taketest")
-    public int takeTest(@RequestBody UserSolution userSolution) throws UserException {
-        return testService.takeTest(userSolution);
+    @PostMapping("/user/test/sendsolution")
+    public int sendSolution(@RequestBody UserSolution userSolution) throws UserException {
+        return testService.sendSolution(userSolution);
     }
 
     @GetMapping("/user/tests/{username}")
     public List<Test> getLiveTestsByUser(@PathVariable("username") String username) {
         return testService.findAllLiveByUserName(username);
+    }
+
+    @GetMapping("/user/test/taketest/{id}")
+    public List<Question> takeTest(@PathVariable("id") int testId) {
+        return testService.takeTest(testId);
     }
 }
