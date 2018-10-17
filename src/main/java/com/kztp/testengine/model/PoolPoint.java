@@ -1,5 +1,7 @@
 package com.kztp.testengine.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -9,9 +11,11 @@ public class PoolPoint {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "voter_id", referencedColumnName = "id")
     private User voter;
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "test_id", referencedColumnName = "id")
     private Test test;
     private Integer vote;

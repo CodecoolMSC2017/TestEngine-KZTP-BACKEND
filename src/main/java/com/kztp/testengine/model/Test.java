@@ -1,5 +1,6 @@
 package com.kztp.testengine.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.Id;
@@ -31,12 +32,15 @@ public class Test {
     private String type;
     private boolean live;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "test")
     private List<PoolPoint> poolPoints = new ArrayList<>();
 
     @OneToMany(mappedBy = "test")
+    @JsonBackReference
     private List<TestRating> testRatings = new ArrayList<>();
 
+    @JsonBackReference
     @OneToMany(mappedBy = "test")
     private List<UsersTest> usersTests = new ArrayList<>();
 

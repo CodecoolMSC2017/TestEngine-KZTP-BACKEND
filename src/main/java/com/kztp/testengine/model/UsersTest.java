@@ -1,5 +1,7 @@
 package com.kztp.testengine.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -10,9 +12,11 @@ public class UsersTest {
     private Integer id;
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
     @ManyToOne
     @JoinColumn(name = "test_id")
+    @JsonBackReference
     private Test test;
     @Column(name = "max_points")
     private Integer maxPoints;
