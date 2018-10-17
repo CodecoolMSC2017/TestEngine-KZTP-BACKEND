@@ -113,7 +113,13 @@ public final class TestService {
                 actualPoints++;
             }
         }
-        int percentage = test.getMaxPoints()/actualPoints;
+        int percentage;
+        if (actualPoints == 0) {
+            percentage = 0;
+        }
+        else {
+            percentage = (actualPoints / test.getMaxPoints())*100;
+        }
 
         usersTestService.createUsersTest(user,test,test.getMaxPoints(),actualPoints,percentage);
         if (!user.getRank().equals("elite")) {
