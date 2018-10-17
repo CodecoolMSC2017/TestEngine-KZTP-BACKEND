@@ -17,6 +17,9 @@ public class Test {
     private String title;
     private String description;
     private String path;
+    @Column(name = "pool_rating")
+    private int poolRating;
+    private float rating;
     private int price;
     @Column(name = "max_points")
     private int maxPoints;
@@ -70,6 +73,22 @@ public class Test {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public int getPoolRating() {
+        return poolRating;
+    }
+
+    public void setPoolRating(int poolRating) {
+        this.poolRating = poolRating;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
     }
 
     public int getPrice() {
