@@ -1,12 +1,15 @@
 package com.kztp.testengine.controller;
 
 import com.kztp.testengine.exception.InvalidUploadTypeException;
+import com.kztp.testengine.exception.InvalidVoteException;
 import com.kztp.testengine.exception.UnauthorizedRequestException;
 import com.kztp.testengine.exception.UserException;
 import com.kztp.testengine.model.NewTest;
 import com.kztp.testengine.model.Question;
 import com.kztp.testengine.model.Test;
 import com.kztp.testengine.model.UserSolution;
+import com.kztp.testengine.service.PoolPointService;
+import com.kztp.testengine.service.TestRatingService;
 import com.kztp.testengine.service.TestService;
 import com.kztp.testengine.service.XMLService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,12 @@ public class TestController {
 
     @Autowired
     private XMLService xmlService;
+
+    @Autowired
+    private TestRatingService testRatingService;
+
+    @Autowired
+    private PoolPointService poolPointService;
 
     @GetMapping("/test/{id}")
     public Test getTestById(@PathVariable("id")int id){
@@ -71,5 +80,15 @@ public class TestController {
     @GetMapping("/user/test/taketest/{id}")
     public List<Question> takeTest(@PathVariable("id") int testId) {
         return testService.takeTest(testId);
+    }
+
+    @PostMapping("/user/test/rate/{id}/{rate}")
+    public void rateTest(@PathVariable("id") int testId,@PathVariable("rate") int vote) throws InvalidVoteException {
+        testRatingService.rate(vote,testId);
+    }
+
+    @PostMapping("/user/pool/vote/{id}/{vote}")
+    public void votePool(@PathVariable("id") int testId,@PathVariable("vote") String vote) throws InvalidVoteException, UnauthorizedRequestException {
+        poolPointService.vote(vote,testId);
     }
 }
