@@ -1,6 +1,7 @@
 package com.kztp.testengine.service;
 
 import com.kztp.testengine.exception.InvalidVoteException;
+import com.kztp.testengine.exception.UnauthorizedRequestException;
 import com.kztp.testengine.model.PoolPoint;
 import com.kztp.testengine.model.Test;
 import com.kztp.testengine.model.User;
@@ -25,15 +26,18 @@ public final class PoolPointService {
     private UserService userService;
 
 
-    public void vote(String vote,int testId) throws InvalidVoteException {
+    public void vote(String vote,int testId) throws InvalidVoteException, UnauthorizedRequestException {
         Test test = testService.getTestById(testId);
+        User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(user.getRank().equals("newbie")) {
+            throw new UnauthorizedRequestException("Your rank is too low to vote on pool tests.");
+        }
         if(test.isLive()) {
             throw new InvalidVoteException("This test is already live,you can't vote on it.");
         }
         if(vote.equals("positive") || vote.equals("negative")) {
             throw new IllegalArgumentException("Only positive and negative votes are accepted");
         }
-        User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         if(poolPointRepository.existsByVoterAndTest(user,test)) {
             PoolPoint poolPoint = poolPointRepository.getByTestAndVoter(test,user);
             if(vote.equals("positive") && poolPoint.getVote() == VoteEnum.VOTE_POSITIVE.getValue()) {
