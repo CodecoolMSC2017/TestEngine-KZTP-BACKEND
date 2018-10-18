@@ -107,10 +107,12 @@ public final class TestService {
         int actualPoints = 0;
         Test test =getTestById(userSolution.getTestId());
         List<Question> questions=xmlService.readXml(test.getPath());
-        Map<Integer,String> solutions = userSolution.getSolutions();
+        List<Solution> solutions = userSolution.getSolutions();
         for(int i = 0;i < questions.size();i++) {
-            if(questions.get(i).getAnswer().getText().equals(solutions.get(i))) {
-                actualPoints++;
+            if(questions.get(i).getId() == solutions.get(i).getId()) {
+                if (questions.get(i).getAnswer().getText().equals(solutions.get(i).getSolution())) {
+                    actualPoints++;
+                }
             }
         }
         float percentage;
