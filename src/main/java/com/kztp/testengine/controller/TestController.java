@@ -83,7 +83,7 @@ public class TestController {
         testRatingService.rate(vote,testId);
     }
 
-    @PostMapping("/user/pool/vote/{id}/{vote}")
+    @PostMapping("/user/test/vote/{id}/{vote}")
     public void votePool(@PathVariable("id") int testId,@PathVariable("vote") String vote) throws InvalidVoteException, UnauthorizedRequestException {
         poolPointService.vote(vote,testId);
     }
@@ -91,5 +91,15 @@ public class TestController {
     @GetMapping("/user/test/taken/{id}")
     public boolean isTestTaken(@PathVariable("id") int testId) {
         return testService.isTestTaken(testId);
+    }
+
+    @GetMapping("/user/test/voted/{id}")
+    public boolean didUserVotePool(@PathVariable("id") int testId) {
+        return testRatingService.didUserRateTest(testId);
+    }
+
+    @GetMapping("/user/test/rated/{id}")
+    public boolean didUserRateTest(@PathVariable("id") int testId) {
+        return poolPointService.didUserVotePool(testId);
     }
 }

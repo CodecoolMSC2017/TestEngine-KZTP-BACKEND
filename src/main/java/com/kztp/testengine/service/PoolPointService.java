@@ -81,4 +81,10 @@ public final class PoolPointService {
         testService.setPoolRating(test,(positive-negative));
     }
 
+    public boolean didUserVotePool(int testId) {
+        User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Test test = testService.getTestById(testId);
+        return poolPointRepository.existsByVoterAndTest(user,test);
+    }
+
 }

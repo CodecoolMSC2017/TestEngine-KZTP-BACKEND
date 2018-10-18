@@ -54,7 +54,7 @@ public class TestRatingService {
 
     }
 
-    public void countRatings(Test test) {
+    private void countRatings(Test test) {
         List<TestRating> testRatings =testRatingRepository.findAllByTest(test);
         float ratingSum =0;
         float rating = 0;
@@ -63,5 +63,11 @@ public class TestRatingService {
         }
         rating = ratingSum/testRatings.size();
         testService.setRating(test,rating);
+    }
+
+    public boolean didUserRateTest(int testId) {
+        User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Test test = testService.getTestById(testId);
+        return testRatingRepository.existsByTestAndVoter(test,user);
     }
 }
