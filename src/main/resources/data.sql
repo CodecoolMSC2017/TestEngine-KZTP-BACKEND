@@ -8,7 +8,7 @@ INSERT INTO public.authorities(
 
 INSERT INTO public.tests(
 	title, description, path, price, max_points, creator, enabled, type,live)
-	VALUES ('Python 3 basics', 'more nagyon kígyó', 'pyhton10334k124ion124n12421ssqw', 5, 10, 1, true, 'language', false);
+	VALUES ('Test for demo', 'test to demonstrate our awesome webapp', '64cf0478bbdf4a83a745894b3994fe40', 0, 5, 1, true, 'language', false);
 INSERT INTO public.tests(
 	title, description, path, price, max_points, creator, enabled, type,live)
 	VALUES ('Python 2 basics', 'more nagyon kígyó', '134cr23rd32dr2dr2drd23r', 5, 10, 1, true, 'language', false);
