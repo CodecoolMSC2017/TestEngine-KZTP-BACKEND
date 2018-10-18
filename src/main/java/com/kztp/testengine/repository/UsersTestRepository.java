@@ -14,4 +14,5 @@ public interface UsersTestRepository extends JpaRepository<UsersTest,Integer>{
     UsersTest findById(int id);
     List<UsersTest> findByUser(User user);
     List<UsersTest> findByTest(Test test);
+    boolean existsByUserAndTest(User user,Test test);
 }
