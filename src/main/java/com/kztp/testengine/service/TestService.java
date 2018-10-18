@@ -60,17 +60,18 @@ public final class TestService {
         return testRepository.save(test);
     }
 
-    public Test createTest(String title,String description, int price, int maxPoints, String type, List<Question> questions) throws UnauthorizedRequestException {
+    public Test createTest(String title,String description, int price, String type, List<Question> questions) throws UnauthorizedRequestException {
         if(userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).getRank().equals("newbie")){
             throw new UnauthorizedRequestException("Your rank is too low to upload tests.");
         }
-        String fileName = xmlService.createXml(maxPoints,questions);
+
+        String fileName = xmlService.createXml(questions.size(),questions);
         Test test = new Test();
         test.setTitle(title);
         test.setDescription(description);
         test.setPath(fileName);
         test.setPrice(price);
-        test.setMaxPoints(maxPoints);
+        test.setMaxPoints(questions.size());
         test.setType(type);
         test.setCreator(userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()));
         addTestToDatabase(test);
