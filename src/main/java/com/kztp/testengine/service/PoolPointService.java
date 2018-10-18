@@ -35,7 +35,7 @@ public final class PoolPointService {
         if(test.isLive()) {
             throw new InvalidVoteException("This test is already live,you can't vote on it.");
         }
-        if(vote.equals("positive") || vote.equals("negative")) {
+        if(!vote.equals("positive") && !vote.equals("negative")) {
             throw new IllegalArgumentException("Only positive and negative votes are accepted");
         }
         if(poolPointRepository.existsByVoterAndTest(user,test)) {
