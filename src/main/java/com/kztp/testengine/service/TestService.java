@@ -61,12 +61,16 @@ public final class TestService {
     }
 
     public Test createTest(String title,String description, int price, String type, List<Question> questions) throws UnauthorizedRequestException {
-        if(userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).getRank().equals("newbie")){
+        User user =userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(user.getRank().equals("newbie")){
             throw new UnauthorizedRequestException("Your rank is too low to upload tests.");
         }
 
         String fileName = xmlService.createXml(questions.size(),questions);
         Test test = new Test();
+        if(user.getRank().equals("elite")) {
+            test.setLive(true);
+        }
         test.setTitle(title);
         test.setDescription(description);
         test.setPath(fileName);
@@ -79,10 +83,14 @@ public final class TestService {
     }
 
     public Test createTestFromUploadedXml(String fileName,String title, String description, int price, int maxpoints, String type) throws UnauthorizedRequestException {
-        if(userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).getRank().equals("newbie")){
+        User user =userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(user.getRank().equals("newbie")){
             throw new UnauthorizedRequestException("Your rank is too low to upload tests.");
         }
         Test test = new Test();
+        if(user.getRank().equals("elite")) {
+            test.setLive(true);
+        }
         test.setTitle(title);
         test.setDescription(description);
         test.setPath(fileName);
