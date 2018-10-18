@@ -36,4 +36,8 @@ public final class UsersTestService {
         usersTest.setPercetage(percentage);
         usersTestRepository.save(usersTest);
     }
+
+    public boolean didUserTakeTest(User user,Test test) {
+        return usersTestRepository.existsByUserAndTest(user,test);
+    }
 }

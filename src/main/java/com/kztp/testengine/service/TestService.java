@@ -129,7 +129,9 @@ public final class TestService {
             percentage = (actualPoints / (float)test.getMaxPoints())*100;
         }
 
-        usersTestService.createUsersTest(user,test,test.getMaxPoints(),actualPoints,Math.round(percentage));
+        if(!usersTestService.didUserTakeTest(user,test)) {
+            usersTestService.createUsersTest(user,test,test.getMaxPoints(),actualPoints,Math.round(percentage));
+        }
         if (!user.getRank().equals("elite")) {
             List<UsersTest> usersTest = usersTestService.getCompletedTestsByUser(user);
             checkRank(user,usersTest);
@@ -183,5 +185,11 @@ public final class TestService {
     public void setPoolRating(Test test,int poolRating) {
         test.setPoolRating(poolRating);
         testRepository.save(test);
+    }
+
+    public boolean isTestTaken(int testId) {
+        User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Test test = testRepository.findById(testId);
+        return usersTestService.didUserTakeTest(user,test);
     }
 }
