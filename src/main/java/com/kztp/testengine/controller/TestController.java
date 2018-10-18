@@ -87,4 +87,9 @@ public class TestController {
     public void votePool(@PathVariable("id") int testId,@PathVariable("vote") String vote) throws InvalidVoteException, UnauthorizedRequestException {
         poolPointService.vote(vote,testId);
     }
+
+    @GetMapping("/user/test/taken/{id}")
+    public boolean isTestTaken(@PathVariable("id") int testId) {
+        return testService.isTestTaken(testId);
+    }
 }
