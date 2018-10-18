@@ -4,10 +4,7 @@ import com.kztp.testengine.exception.InvalidUploadTypeException;
 import com.kztp.testengine.exception.InvalidVoteException;
 import com.kztp.testengine.exception.UnauthorizedRequestException;
 import com.kztp.testengine.exception.UserException;
-import com.kztp.testengine.model.NewTest;
-import com.kztp.testengine.model.Question;
-import com.kztp.testengine.model.Test;
-import com.kztp.testengine.model.UserSolution;
+import com.kztp.testengine.model.*;
 import com.kztp.testengine.service.PoolPointService;
 import com.kztp.testengine.service.TestRatingService;
 import com.kztp.testengine.service.TestService;
@@ -68,7 +65,7 @@ public class TestController {
     }
 
     @PostMapping("/user/test/sendsolution")
-    public int sendSolution(@RequestBody UserSolution userSolution) throws UserException {
+    public TestResult sendSolution(@RequestBody UserSolution userSolution) throws UserException {
         return testService.sendSolution(userSolution);
     }
 

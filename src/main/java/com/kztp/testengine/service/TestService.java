@@ -102,18 +102,23 @@ public final class TestService {
 
     //User user, Test test,int maxPoints,int actualPoints,int percentage
 
-    public int sendSolution(UserSolution userSolution) throws UserException {
+    public TestResult sendSolution(UserSolution userSolution) throws UserException {
         User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         int actualPoints = 0;
         Test test =getTestById(userSolution.getTestId());
         List<Question> questions=xmlService.readXml(test.getPath());
         List<Solution> solutions = userSolution.getSolutions();
         for(int i = 0;i < questions.size();i++) {
-            if(questions.get(i).getId() == solutions.get(i).getId()) {
-                if (questions.get(i).getAnswer().getText().equals(solutions.get(i).getSolution())) {
-                    actualPoints++;
+            Solution solution = new Solution();
+            for (Solution solution1:solutions) {
+                if(solution1.getId() == questions.get(i).getId()) {
+                    solution = solution1;
                 }
             }
+            if (questions.get(i).getAnswer().getText().equals(solution.getSolution())) {
+                actualPoints++;
+            }
+
         }
         float percentage;
         if (actualPoints == 0) {
@@ -128,7 +133,12 @@ public final class TestService {
             List<UsersTest> usersTest = usersTestService.getCompletedTestsByUser(user);
             checkRank(user,usersTest);
         }
-        return Math.round(percentage);
+        List<Solution> correctSolutions = new ArrayList<>();
+        for (Question question : questions) {
+            Solution solution = new Solution(question.getId(),question.getAnswer().getText());
+            correctSolutions.add(solution);
+        }
+        return new TestResult(Math.round(percentage),correctSolutions);
     }
 
     private void checkRank(User user,List<UsersTest> tests) throws UserException {
