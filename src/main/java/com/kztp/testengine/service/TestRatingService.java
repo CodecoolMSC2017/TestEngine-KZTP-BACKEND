@@ -26,7 +26,7 @@ public class TestRatingService {
     @Autowired
     private UsersTestService usersTestService;
 
-    public void rate(int vote,int testId) throws InvalidVoteException {
+    public float rate(int vote,int testId) throws InvalidVoteException {
         Test test = testService.getTestById(testId);
         User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
 
@@ -50,6 +50,7 @@ public class TestRatingService {
             testRatingRepository.save(testRating);
         }
         countRatings(test);
+        return test.getRating();
 
 
     }

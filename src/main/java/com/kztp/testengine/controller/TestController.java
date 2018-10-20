@@ -79,13 +79,13 @@ public class TestController {
     }
 
     @PostMapping("/user/test/rate/{id}/{rate}")
-    public void rateTest(@PathVariable("id") int testId,@PathVariable("rate") int vote) throws InvalidVoteException {
-        testRatingService.rate(vote,testId);
+    public float rateTest(@PathVariable("id") int testId,@PathVariable("rate") int vote) throws InvalidVoteException {
+        return testRatingService.rate(vote,testId);
     }
 
     @PostMapping("/user/test/vote/{id}/{vote}")
-    public void votePool(@PathVariable("id") int testId,@PathVariable("vote") String vote) throws InvalidVoteException, UnauthorizedRequestException {
-        poolPointService.vote(vote,testId);
+    public int votePool(@PathVariable("id") int testId,@PathVariable("vote") String vote) throws InvalidVoteException, UnauthorizedRequestException {
+        return poolPointService.vote(vote,testId);
     }
 
     @GetMapping("/user/test/taken/{id}")

@@ -26,7 +26,7 @@ public final class PoolPointService {
     private UserService userService;
 
 
-    public void vote(String vote,int testId) throws InvalidVoteException, UnauthorizedRequestException {
+    public int vote(String vote,int testId) throws InvalidVoteException, UnauthorizedRequestException {
         Test test = testService.getTestById(testId);
         User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         if(user.getRank().equals("newbie")) {
@@ -69,6 +69,7 @@ public final class PoolPointService {
             }
         }
         checkPoolPointsLive(test);
+        return test.getPoolRating();
 
     }
 
