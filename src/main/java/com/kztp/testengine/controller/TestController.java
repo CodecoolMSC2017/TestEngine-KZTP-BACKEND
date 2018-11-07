@@ -41,8 +41,19 @@ public class TestController {
         return testService.getTestById(id);
     }
     @GetMapping("/test/all")
-    public Page<Test> getAllTest(@RequestParam("page") int pageNumber){
-        return testService.findAll(PageRequest.of(pageNumber,PAGESIZE,Sort.Direction.ASC,"type"));
+    public Page<Test> getAllTest(@RequestParam("page") int pageNumber,
+                                 @RequestParam("pagesize") int pageSize,
+                                 @RequestParam("order") String order,
+                                 @RequestParam("orderby") String orderby){
+        if(orderby.equals("")) {
+            orderby = "type";
+        }
+        if(order.equals("none") || order.equals("asc")) {
+            return testService.findAll(PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, orderby));
+        }
+        else {
+            return testService.findAll(PageRequest.of(pageNumber, pageSize, Sort.Direction.DESC, orderby));
+        }
     }
     @GetMapping("/user/test/pool")
     public Page<Test> getPoolTests(@RequestParam("page") int pageNumber) throws UnauthorizedRequestException {
