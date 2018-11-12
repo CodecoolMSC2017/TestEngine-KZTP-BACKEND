@@ -13,15 +13,17 @@ import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -197,22 +199,20 @@ public final class XMLService {
         return status;
     }
 
-    private boolean xmlValidator(String path) {
-        List<Question> questions = readXml(path);
-        if(questions.size() == 0 ){
+    private boolean xmlValidator(String xmlFile) {
+        File schemaFile = new File("schema.xsd");
+        Source xmlFileSource = new StreamSource(new File(xmlFile));
+        SchemaFactory schemaFactory = SchemaFactory
+                .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        try {
+            Schema schema = schemaFactory.newSchema(schemaFile);
+            Validator validator = schema.newValidator();
+            validator.validate(xmlFileSource);
+            return true;
+        } catch (SAXException | IOException e) {
+            System.out.println("Wrong xml format!");
             return false;
         }
-        for(Question question : questions) {
-            if (question.getText() == null || question.getAnswer() == null || question.getChoices().size() == 0 ) {
-                return false;
-            }
-            for(Choice choice : question.getChoices()) {
-                if(choice.getText() == null || choice.getText().length() < 1) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 
 }
