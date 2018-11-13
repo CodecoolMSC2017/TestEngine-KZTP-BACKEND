@@ -5,6 +5,7 @@ import com.kztp.testengine.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface TestRepository extends JpaRepository<Test,Integer> {
     Page<Test> findByLiveTrue(Pageable pageable);
     Page<Test> findByLiveFalse(Pageable pageable);
     List<Test> findByCreatorAndLiveTrue(User creator);
+    @Query(value="SELECT * FROM tests WHERE live=?1 AND title LIKE ?2 AND rating BETWEEN ?3 AND ?4 AND price BETWEEN ?5 AND ?6 ",nativeQuery = true)
+    Page<Test> findAllByParameter(boolean live,String title,int ratingMin,int ratingMax,int priceMin,int priceMax,Pageable pageable);
 }

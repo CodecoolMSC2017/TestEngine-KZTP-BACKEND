@@ -44,15 +44,27 @@ public class TestController {
     public Page<Test> getAllTest(@RequestParam("page") int pageNumber,
                                  @RequestParam("pagesize") int pageSize,
                                  @RequestParam("order") String order,
-                                 @RequestParam("orderby") String orderby){
+                                 @RequestParam("orderby") String orderby,
+                                 @RequestParam("live") boolean live,
+                                 @RequestParam("title") String title,
+                                 @RequestParam("ratingMin") int ratingMin,
+                                 @RequestParam("ratingMax") int ratingMax,
+                                 @RequestParam("priceMin") int priceMin,
+                                 @RequestParam("priceMax") int priceMax){
+        if(title.equals("")) {
+            title = "%";
+        }
+        else {
+            title = "%" + title + "%";
+        }
         if(orderby.equals("")) {
             orderby = "type";
         }
         if(order.equals("none") || order.equals("asc")) {
-            return testService.findAll(PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, orderby));
+            return testService.findAll(PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, orderby), live, title, ratingMin, ratingMax, priceMin, priceMax);
         }
         else {
-            return testService.findAll(PageRequest.of(pageNumber, pageSize, Sort.Direction.DESC, orderby));
+            return testService.findAll(PageRequest.of(pageNumber, pageSize, Sort.Direction.DESC, orderby), live, title, ratingMin, ratingMax, priceMin, priceMax);
         }
     }
     @GetMapping("/user/test/pool")

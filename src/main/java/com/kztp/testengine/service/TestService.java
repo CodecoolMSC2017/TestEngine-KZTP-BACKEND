@@ -33,8 +33,8 @@ public final class TestService {
         return testRepository.findById(id);
     }
 
-    public Page<Test> findAll(Pageable pageable) {
-        return testRepository.findByLiveTrue(pageable);
+    public Page<Test> findAll(Pageable pageable,boolean live,String title,int ratingMin,int ratingMax,int priceMin,int priceMax) {
+        return testRepository.findAllByParameter( live, title, ratingMin, ratingMax, priceMin, priceMax,pageable);
     }
 
     public Page<Test> findAllPoolTest(Pageable pageable) throws UnauthorizedRequestException {
