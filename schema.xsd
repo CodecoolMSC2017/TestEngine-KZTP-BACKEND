@@ -1,0 +1,23 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="test" type="testType"/>
+    <xs:complexType name="choicesType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="c" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="questionType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="text"/>
+            <xs:element type="xs:byte" name="id"/>
+            <xs:element type="choicesType" name="choices"/>
+            <xs:element type="xs:string" name="answer"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="testType">
+        <xs:sequence>
+            <xs:element type="xs:byte" name="maxpoints"/>
+            <xs:element type="questionType" name="question" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
+
