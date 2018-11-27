@@ -16,6 +16,6 @@ public interface TestRepository extends JpaRepository<Test,Integer> {
     Page<Test> findByLiveTrue(Pageable pageable);
     Page<Test> findByLiveFalse(Pageable pageable);
     List<Test> findByCreatorAndLiveTrue(User creator);
-    @Query(value="SELECT * FROM tests WHERE live=?1 AND title LIKE ?2 AND rating BETWEEN ?3 AND ?4 AND price BETWEEN ?5 AND ?6 ",nativeQuery = true)
+    @Query(value="SELECT * FROM tests WHERE live=?1 AND LOWER(title) LIKE LOWER(?2) AND rating BETWEEN ?3 AND ?4 AND price BETWEEN ?5 AND ?6 ",nativeQuery = true)
     Page<Test> findAllByParameter(boolean live,String title,int ratingMin,int ratingMax,int priceMin,int priceMax,Pageable pageable);
 }

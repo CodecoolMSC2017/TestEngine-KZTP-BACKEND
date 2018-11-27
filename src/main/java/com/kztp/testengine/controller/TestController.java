@@ -50,7 +50,7 @@ public class TestController {
                                  @RequestParam("ratingMin") int ratingMin,
                                  @RequestParam("ratingMax") int ratingMax,
                                  @RequestParam("priceMin") int priceMin,
-                                 @RequestParam("priceMax") int priceMax){
+                                 @RequestParam("priceMax") int priceMax) throws UnauthorizedRequestException {
         if(title.equals("")) {
             title = "%";
         }

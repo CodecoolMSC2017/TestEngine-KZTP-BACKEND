@@ -33,7 +33,14 @@ public final class TestService {
         return testRepository.findById(id);
     }
 
-    public Page<Test> findAll(Pageable pageable,boolean live,String title,int ratingMin,int ratingMax,int priceMin,int priceMax) {
+    public Page<Test> findAll(Pageable pageable,boolean live,String title,int ratingMin,int ratingMax,int priceMin,int priceMax) throws UnauthorizedRequestException {
+        if(!live) {
+            User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+            if (user.getRank().equals("newbie")) {
+                throw new UnauthorizedRequestException("Your rank is too low to see this page.");
+            }
+        }
+
         return testRepository.findAllByParameter( live, title, ratingMin, ratingMax, priceMin, priceMax,pageable);
     }
 
