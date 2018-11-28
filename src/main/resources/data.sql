@@ -48,3 +48,7 @@ INSERT INTO public.tests(
 INSERT INTO public.tests(
 	title, description, path, price, max_points, creator, enabled, type,live)
 	VALUES ('javascript basics', 'asdsafasf', '23cr23r23ctc3ta', 5, 10, 1, true, 'language', true);
+
+INSERT INTO public.news(
+	title, author, content)
+	VALUES ('Meghalt Stalone', 1, 'Meghalt a Stalone nevű kistücsök' );

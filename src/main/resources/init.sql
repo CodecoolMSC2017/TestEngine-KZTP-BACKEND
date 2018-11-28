@@ -18,6 +18,8 @@ ALTER TABLE Testratings DROP CONSTRAINT IF EXISTS Testratings_fk0;
 
 ALTER TABLE Testratings DROP CONSTRAINT IF EXISTS Testratings_fk1;
 
+ALTER TABLE News DROP CONSTRAINT IF EXISTS News_fk0;
+
 DROP TABLE IF EXISTS Tests;
 
 DROP TABLE IF EXISTS Authorities;
@@ -33,6 +35,8 @@ DROP TABLE IF EXISTS Payments;
 DROP TABLE IF EXISTS Poolpoints;
 
 DROP TABLE IF EXISTS Testratings;
+
+DROP TABLE IF EXISTS News;
 
 CREATE TABLE Tests (
 	id serial NOT NULL,
@@ -133,6 +137,16 @@ CREATE TABLE Testratings (
   OIDS=FALSE
 );
 
+CREATE TABLE News (
+    id serial NOT NULL,
+    title TEXT NOT NULL,
+    author integer NOT NULL,
+    content TEXT NOT NULL,
+    CONSTRAINT News_pg PRIMARY KEY (id)
+) WITH (
+  OIDS = FALSE
+);
+
 
 ALTER TABLE Tests ADD CONSTRAINT Tests_fk0 FOREIGN KEY (creator) REFERENCES Users(id);
 
@@ -151,4 +165,6 @@ ALTER TABLE Poolpoints ADD CONSTRAINT Poolpoints_fk1 FOREIGN KEY (test_id) REFER
 
 ALTER TABLE Testratings ADD CONSTRAINT Testratings_fk0 FOREIGN KEY (voter_id) REFERENCES Users(id);
 ALTER TABLE Testratings ADD CONSTRAINT Testratings_fk1 FOREIGN KEY (test_id) REFERENCES Tests(id);
+
+ALTER TABLE News ADD CONSTRAINT News_fk0 FOREIGN KEY (author) REFERENCES Users(id);
 
