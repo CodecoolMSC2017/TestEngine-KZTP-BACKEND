@@ -52,3 +52,15 @@ INSERT INTO public.tests(
 INSERT INTO public.news(
 	title, author, content)
 	VALUES ('Meghalt Stalone', 1, 'Meghalt a Stalone nevű kistücsök' );
+INSERT INTO public.news(
+	title, author, content)
+	VALUES ('Meghalt Szilveszter', 1, 'Meghalt a szilveszterkor valaki' );
+INSERT INTO public.news(
+	title, author, content)
+	VALUES ('Meghalt ZamboDzsimi (NOT CLICKBAIT!!)', 1, 'Meghalt Lakatos ZamboDzsimi házi patkánya RIP' );
+INSERT INTO public.news(
+	title, author, content)
+	VALUES ('Mégsem halt meg Stalone', 1, 'De mégis' );
+INSERT INTO public.news(
+	title, author, content)
+	VALUES ('Világbajnok Magyarország Foci csapata !', 1, 'Utána kikapcsolták az xboxot' );
