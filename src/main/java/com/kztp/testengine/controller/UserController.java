@@ -30,5 +30,9 @@ public class UserController {
         return userService.getUserByUsername(username);
     }
 
+    @GetMapping(path = "/mysettings")
+    public User getLoggedUser(){
+        return userService.getLoggedUser();
+    }
 
 }

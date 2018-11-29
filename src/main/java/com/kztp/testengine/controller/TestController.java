@@ -8,6 +8,7 @@ import com.kztp.testengine.model.*;
 import com.kztp.testengine.service.PoolPointService;
 import com.kztp.testengine.service.TestRatingService;
 import com.kztp.testengine.service.TestService;
+import com.kztp.testengine.service.UsersTestService;
 import com.kztp.testengine.service.XMLService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,6 +36,9 @@ public class TestController {
 
     @Autowired
     private PoolPointService poolPointService;
+
+    @Autowired
+    private UsersTestService usersTestService;
 
     @GetMapping("/test/{id}")
     public Test getTestById(@PathVariable("id")int id){
@@ -124,5 +128,10 @@ public class TestController {
     @GetMapping("/user/test/rated/{id}")
     public boolean didUserRateTest(@PathVariable("id") int testId) {
         return poolPointService.didUserVotePool(testId);
+    }
+
+    @GetMapping("/user/teststaken")
+    public List<UsersTest> getTakenTestsForLoggedUser(){
+       return usersTestService.getLoggedUserCompletedTests();
     }
 }

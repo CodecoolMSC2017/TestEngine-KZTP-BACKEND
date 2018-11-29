@@ -160,5 +160,9 @@ public final class UserService {
 
     }
 
+    public User getLoggedUser(){
+        return getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+    }
+
 
 }

@@ -5,6 +5,7 @@ import com.kztp.testengine.model.User;
 import com.kztp.testengine.model.UsersTest;
 import com.kztp.testengine.repository.UsersTestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -15,7 +16,15 @@ public final class UsersTestService {
     @Autowired
     private UsersTestRepository usersTestRepository;
 
+    @Autowired
+    private UserService userService;
+
     public List<UsersTest> getCompletedTestsByUser(User user) {
+        return usersTestRepository.findByUser(user);
+    }
+
+    public List<UsersTest> getLoggedUserCompletedTests(){
+        User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         return usersTestRepository.findByUser(user);
     }
 
