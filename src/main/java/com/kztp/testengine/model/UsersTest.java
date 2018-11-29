@@ -16,7 +16,6 @@ public class UsersTest {
     private User user;
     @ManyToOne
     @JoinColumn(name = "test_id")
-    @JsonBackReference
     private Test test;
     @Column(name = "max_points")
     private Integer maxPoints;

@@ -31,7 +31,7 @@ public class User implements Serializable {
     private List<String> authorities;
 
     @OneToMany(mappedBy = "user")
-    @JsonManagedReference
+    @JsonBackReference
     private List<UsersTest> usersTest = new ArrayList<>();
 
     @OneToMany(mappedBy = "author")
