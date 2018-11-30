@@ -18,10 +18,10 @@ public class NewsController {
     @GetMapping("/news")
     public Page<News> getNews(@RequestParam("page") int pageNumber,
                               @RequestParam("pagesize") int pageSize){
-        return newsService.getAllNews(PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC,"id"));
+        return newsService.getAllNews(PageRequest.of(pageNumber, pageSize, Sort.Direction.DESC,"id"));
     }
     @PostMapping("/admin/news/create")
-    public void createNews(NewNews news) throws UnauthorizedRequestException {
+    public void createNews(@RequestBody NewNews news) throws UnauthorizedRequestException {
         newsService.createNews(news);
     }
     @DeleteMapping("/admin/news/delete/{id}")
