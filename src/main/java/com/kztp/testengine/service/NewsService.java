@@ -57,4 +57,8 @@ public final class NewsService {
         newsRepository.save(originalNews);
 
     }
+
+    public News getNewsById(Integer id){
+        return newsRepository.findById(id).get();
+    }
 }

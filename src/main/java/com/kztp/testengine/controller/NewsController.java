@@ -33,4 +33,8 @@ public class NewsController {
     public void editNews(@RequestBody EditNews editNews) throws UnauthorizedRequestException {
         newsService.editNews(editNews);
     }
+    @GetMapping("/admin/news/{id}")
+    public News getNewsById(@PathVariable("id") int id){
+        return newsService.getNewsById(id);
+    }
 }
