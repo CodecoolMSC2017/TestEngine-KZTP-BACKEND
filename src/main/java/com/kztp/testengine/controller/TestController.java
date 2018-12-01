@@ -5,11 +5,7 @@ import com.kztp.testengine.exception.InvalidVoteException;
 import com.kztp.testengine.exception.UnauthorizedRequestException;
 import com.kztp.testengine.exception.UserException;
 import com.kztp.testengine.model.*;
-import com.kztp.testengine.service.PoolPointService;
-import com.kztp.testengine.service.TestRatingService;
-import com.kztp.testengine.service.TestService;
-import com.kztp.testengine.service.UsersTestService;
-import com.kztp.testengine.service.XMLService;
+import com.kztp.testengine.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,6 +35,12 @@ public class TestController {
 
     @Autowired
     private UsersTestService usersTestService;
+
+    @Autowired
+    private TestReportService testReportService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/test/{id}")
     public Test getTestById(@PathVariable("id")int id){
@@ -134,4 +136,28 @@ public class TestController {
     public List<UsersTest> getTakenTestsForLoggedUser(){
        return usersTestService.getLoggedUserCompletedTests();
     }
+
+    @GetMapping("/admin/test/reportedtests")
+    public Page<TestReport> getReportedTestsForUser(@RequestParam("page") int pageNumber,
+                                                    @RequestParam("pagesize") int pageSize){
+        return testReportService.getAllReportedTest(PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, "id"));
+    }
+
+    @GetMapping("/admin/test/reportedtests/{id}")
+    public Page<TestReport> getReportedTestForUser(@PathVariable("id") int id, @RequestParam("page") int pageNumber,
+                                                   @RequestParam("pagesize") int pageSize){
+        return testReportService.getAllReportedTestByUser(userService.getUserById(id),PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, "id"));
+    }
+
+    @GetMapping("/user/test/myreports")
+    public Page<TestReport> getLoggedUserReportedTest(@RequestParam("page") int pageNumber, @RequestParam("pagesize") int pageSize){
+        return testReportService.getAllReportedTestByForLoggedUser(PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, "id"));
+    }
+
+    @GetMapping("/user/test/reports/{id}")
+    public Page<TestReport> getReportsForTest(@PathVariable("id") int id, @RequestParam("page") int pageNumber,
+                                              @RequestParam("pagesize") int pageSize){
+        return testReportService.getAllReportedTestByTest(testService.getTestById(id),PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, "id"));
+    }
+
 }
