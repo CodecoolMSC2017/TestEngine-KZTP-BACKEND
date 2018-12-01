@@ -38,6 +38,10 @@ public class User implements Serializable {
     @JsonBackReference
     private List<News> news = new ArrayList<>();
 
+    @OneToMany(mappedBy = "reporter")
+    @JsonBackReference
+    private List<TestReport> reports = new ArrayList<>();
+
 
 
     public User() {
@@ -114,5 +118,13 @@ public class User implements Serializable {
 
     public void setNews(List<News> news) {
         this.news = news;
+    }
+
+    public List<TestReport> getReports() {
+        return reports;
+    }
+
+    public void setReports(List<TestReport> reports) {
+        this.reports = reports;
     }
 }
