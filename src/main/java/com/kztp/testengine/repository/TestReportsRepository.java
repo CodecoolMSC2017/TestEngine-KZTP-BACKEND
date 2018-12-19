@@ -10,7 +10,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TestReportsRepository extends JpaRepository<TestReport,Integer> {
-    Page<TestReport> findAllByReporter(User reporter, Pageable pageable);
-    Page<TestReport> findAllByReportedTest(Test test, Pageable pageable);
-    Page<TestReport> findAll(Pageable pageable);
+    Page<TestReport> findAllByReporterAndSolvedFalse(User reporter, Pageable pageable);
+    Page<TestReport> findAllByReportedTestAndSolvedFalse(Test test, Pageable pageable);
+    Page<TestReport> findAllBySolvedFalse(Pageable pageable);
+    boolean existsByReporterAndReportedTest(User reporter,Test reportedTest);
+    TestReport findByReporterAndReportedTest(User reporter,Test reportedTest);
 }

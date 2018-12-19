@@ -160,4 +160,13 @@ public class TestController {
         return testReportService.getAllReportedTestByTest(testService.getTestById(id),PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, "id"));
     }
 
+    @PostMapping("/user/test/report/{id}")
+    public String reportTest(@PathVariable("id") int testId,@RequestBody String description) {
+        return testReportService.reportTest(testService.getTestById(testId),description);
+    }
+
+    @PostMapping("/admin/report/solved/{id}")
+    public void resolveReport(@PathVariable("id") int reportId) {
+        testReportService.resolveReport(reportId);
+    }
 }

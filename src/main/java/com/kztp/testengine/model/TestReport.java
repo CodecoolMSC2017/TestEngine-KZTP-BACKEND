@@ -24,6 +24,7 @@ public class TestReport {
     @ManyToOne
     @JoinColumn(name = "test_id")
     private Test reportedTest;
+    private boolean solved;
 
     public TestReport() {
     }
@@ -58,5 +59,13 @@ public class TestReport {
 
     public void setReportedTest(Test reportedTest) {
         this.reportedTest = reportedTest;
+    }
+
+    public boolean isSolved() {
+        return solved;
+    }
+
+    public void setSolved(boolean solved) {
+        this.solved = solved;
     }
 }

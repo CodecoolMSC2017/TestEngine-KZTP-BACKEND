@@ -86,6 +86,7 @@ CREATE TABLE Testreports (
 	description TEXT NOT NULL,
 	reporting_user integer NOT NULL,
 	test_id integer NOT NULL,
+	solved boolean DEFAULT false,
 	CONSTRAINT Testreports_pk PRIMARY KEY (id)
 ) WITH (
   OIDS=FALSE
