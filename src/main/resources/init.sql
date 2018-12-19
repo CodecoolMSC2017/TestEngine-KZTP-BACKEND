@@ -84,7 +84,7 @@ CREATE TABLE Users (
 CREATE TABLE Testreports (
 	id serial NOT NULL,
 	description TEXT NOT NULL,
-	reporting_user integer NOT NULL,
+	user_id integer NOT NULL,
 	test_id integer NOT NULL,
 	solved boolean DEFAULT false,
 	CONSTRAINT Testreports_pk PRIMARY KEY (id)
@@ -154,7 +154,7 @@ ALTER TABLE Tests ADD CONSTRAINT Tests_fk0 FOREIGN KEY (creator) REFERENCES User
 ALTER TABLE Authorities ADD CONSTRAINT Authorities_fk0 FOREIGN KEY (username) REFERENCES Users(username);
 
 
-ALTER TABLE Testreports ADD CONSTRAINT Testreports_fk0 FOREIGN KEY (reporting_user) REFERENCES Users(id);
+ALTER TABLE Testreports ADD CONSTRAINT Testreports_fk0 FOREIGN KEY (user_id) REFERENCES Users(id);
 ALTER TABLE Testreports ADD CONSTRAINT Testreports_fk1 FOREIGN KEY (test_id) REFERENCES Tests(id);
 
 ALTER TABLE Userstests ADD CONSTRAINT Userstests_fk0 FOREIGN KEY (user_id) REFERENCES Users(id);

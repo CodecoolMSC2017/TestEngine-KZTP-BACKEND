@@ -2,15 +2,6 @@ package com.kztp.testengine.model;
 
 import javax.persistence.*;
 
-/*REATE TABLE Testreports (
-        id serial NOT NULL,
-        description TEXT NOT NULL,
-        reporting_user integer NOT NULL,
-        test_id integer NOT NULL,
-        CONSTRAINT Testreports_pk PRIMARY KEY (id)
-        ) WITH (
-        OIDS=FALSE
-        );*/
 @Entity
 @Table(name = "Testreports")
 public class TestReport {
@@ -19,10 +10,11 @@ public class TestReport {
     private Integer id;
     private String description;
 
-    @JoinColumn(name="reporting_user")
+    @ManyToOne
+    @JoinColumn(name="user_id",referencedColumnName = "id")
     private User reporter;
     @ManyToOne
-    @JoinColumn(name = "test_id")
+    @JoinColumn(name = "test_id",referencedColumnName = "id")
     private Test reportedTest;
     private boolean solved;
 
