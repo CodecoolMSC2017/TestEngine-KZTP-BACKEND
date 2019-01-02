@@ -140,7 +140,7 @@ public class TestController {
     @GetMapping("/admin/test/reportedtests")
     public Page<TestReport> getReportedTestsForUser(@RequestParam("page") int pageNumber,
                                                     @RequestParam("pagesize") int pageSize){
-        return testReportService.getAllReportedTest(PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, "id"));
+        return testReportService.getAllReportedTest(PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, "solved"));
     }
 
     @GetMapping("/admin/test/reportedtests/{id}")
