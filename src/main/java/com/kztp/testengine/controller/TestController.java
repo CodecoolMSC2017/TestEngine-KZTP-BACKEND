@@ -1,9 +1,6 @@
 package com.kztp.testengine.controller;
 
-import com.kztp.testengine.exception.InvalidUploadTypeException;
-import com.kztp.testengine.exception.InvalidVoteException;
-import com.kztp.testengine.exception.UnauthorizedRequestException;
-import com.kztp.testengine.exception.UserException;
+import com.kztp.testengine.exception.*;
 import com.kztp.testengine.model.*;
 import com.kztp.testengine.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -168,5 +166,39 @@ public class TestController {
     @PostMapping("/admin/report/solved/{id}")
     public void resolveReport(@PathVariable("id") int reportId) {
         testReportService.resolveReport(reportId);
+    }
+
+    @PostMapping("/test/edited/{id}")
+    public void editTest(@PathVariable("id") int testId,
+                         @RequestParam("path") String path,
+                         @RequestParam("questionId") int questionId,
+                         @RequestParam("newQuestionContent") String newQuestionContent,
+                         @RequestParam("choiceId") String choiceId,
+                         @RequestParam("newChoiceContent") String newChoiceContent) throws NodeNotFoundException, UnauthorizedRequestException {
+        User loggedInUser = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(!testService.getTestById(testId).getCreator().getId().equals(loggedInUser.getId()) && !loggedInUser.getAuthorities().contains("ROLE_ADMIN")) {
+            throw new UnauthorizedRequestException("You are not permitted to edit the test.");
+        }
+        if(choiceId.equals("")) {
+            xmlService.editXml(path,questionId,newQuestionContent);
+        }
+        else{
+            int choiceIdInt = Integer.parseInt(choiceId);
+            if(newChoiceContent.equals("")) {
+                xmlService.editXml(path,questionId,choiceIdInt);
+            }
+            else {
+                xmlService.editXml(path,questionId,choiceIdInt,newChoiceContent);
+            }
+        }
+    }
+
+    @GetMapping("/test/edit/{id}")
+    public List<Question> getTestToEdit(@PathVariable("id") int testId) throws UnauthorizedRequestException {
+        User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(!user.getAuthorities().contains("ROLE_ADMIN") && !user.getId().equals(testService.getTestById(testId).getCreator().getId())) {
+            throw new UnauthorizedRequestException("You don't have the permission to edit the test.");
+        }
+        return xmlService.readXml(testService.getTestById(testId).getPath());
     }
 }
