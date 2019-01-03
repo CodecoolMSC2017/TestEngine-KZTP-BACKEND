@@ -1,6 +1,7 @@
 package com.kztp.testengine.service;
 
 import com.kztp.testengine.exception.InvalidUploadTypeException;
+import com.kztp.testengine.exception.NodeNotFoundException;
 import com.kztp.testengine.exception.UnauthorizedRequestException;
 import com.kztp.testengine.model.Choice;
 import com.kztp.testengine.model.Question;
@@ -133,6 +134,63 @@ public final class XMLService {
 
 
         return questionList;
+    }
+
+    //Edit question
+    public void editXml(String path,int questionId,String newQuestionContent) throws NodeNotFoundException {
+        try {
+            String filepath = path + ".xml";
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            Document doc = docBuilder.parse(filepath);
+
+            // Get the root element
+            Node test = doc.getFirstChild();
+
+            // Get the staff element , it may not working if tag has spaces, or
+            // whatever weird characters in front...it's better to use
+            // getElementsByTagName() to get it directly.
+            // Node staff = company.getFirstChild();
+
+            // Get the staff element by tag name directly
+            Node question = doc.getElementsByTagName("question").item(questionId);
+
+            if(!"text".equals(question.getChildNodes().item(0).getNodeName())) {
+                throw new NodeNotFoundException("Node text not found.");
+            }
+            Node questionText =question.getChildNodes().item(0);
+            questionText.setTextContent(newQuestionContent);
+
+
+            // write the content into xml file
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(new File(filepath));
+            transformer.transform(source, result);
+
+            System.out.println("Done");
+
+        } catch (ParserConfigurationException pce) {
+            pce.printStackTrace();
+        } catch (TransformerException tfe) {
+            tfe.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        } catch (SAXException sae) {
+            sae.printStackTrace();
+        }
+
+    }
+
+    //Edit choice
+    public void editXml(String path,int questionId,int choiceId,String newChoiceContent) {
+
+    }
+
+    //Edit answer
+    public void editXml(String path,int questionId,int choiceId) {
+
     }
 
     private Question getQuestion(Node node) {
