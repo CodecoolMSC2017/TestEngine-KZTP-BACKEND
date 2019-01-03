@@ -52,11 +52,16 @@ public final class TestService {
         return testRepository.findByLiveFalse(pageable);
     }
 
-    public List<Test> findAllLiveByUserName(String userName) {
+    public List<Test> findAllByUserName(String userName,boolean live) {
         List<Test> tests;
         if (userService.userExists(userName)) {
             User user = userService.getUserByUsername(userName);
-            tests = testRepository.findByCreatorAndLiveTrue(user);
+            if(live) {
+                tests = testRepository.findByCreatorAndLiveTrue(user);
+            }
+            else {
+                tests = testRepository.findByCreatorAndLiveFalse(user);
+            }
         } else {
             throw new IllegalArgumentException("No user with this name.");
         }

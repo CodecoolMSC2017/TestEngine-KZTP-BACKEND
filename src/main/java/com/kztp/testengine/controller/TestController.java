@@ -95,9 +95,9 @@ public class TestController {
         return testService.sendSolution(userSolution);
     }
 
-    @GetMapping("/user/tests/{username}")
-    public List<Test> getLiveTestsByUser(@PathVariable("username") String username) {
-        return testService.findAllLiveByUserName(username);
+    @GetMapping("/user/tests/{username}/{live}")
+    public List<Test> getTestsByUser(@PathVariable("username") String username,@PathVariable("live") boolean live) {
+        return testService.findAllByUserName(username,live);
     }
 
     @GetMapping("/user/test/taketest/{id}")
@@ -169,28 +169,14 @@ public class TestController {
     }
 
     @PostMapping("/test/edited/{id}")
-    public void editTest(@PathVariable("id") int testId,
-                         @RequestParam("path") String path,
-                         @RequestParam("questionId") int questionId,
-                         @RequestParam("newQuestionContent") String newQuestionContent,
-                         @RequestParam("choiceId") String choiceId,
-                         @RequestParam("newChoiceContent") String newChoiceContent) throws NodeNotFoundException, UnauthorizedRequestException {
+    public void editTest(@PathVariable("id") int testId,@RequestBody List<Question> questions
+                         ) throws NodeNotFoundException, UnauthorizedRequestException {
         User loggedInUser = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         if(!testService.getTestById(testId).getCreator().getId().equals(loggedInUser.getId()) && !loggedInUser.getAuthorities().contains("ROLE_ADMIN")) {
             throw new UnauthorizedRequestException("You are not permitted to edit the test.");
         }
-        if(choiceId.equals("")) {
-            xmlService.editXml(path,questionId,newQuestionContent);
-        }
-        else{
-            int choiceIdInt = Integer.parseInt(choiceId);
-            if(newChoiceContent.equals("")) {
-                xmlService.editXml(path,questionId,choiceIdInt);
-            }
-            else {
-                xmlService.editXml(path,questionId,choiceIdInt,newChoiceContent);
-            }
-        }
+        xmlService.editXml(testId,questions);
+
     }
 
     @GetMapping("/test/edit/{id}")

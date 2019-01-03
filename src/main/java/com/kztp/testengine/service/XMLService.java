@@ -136,8 +136,8 @@ public final class XMLService {
         return questionList;
     }
 
-    //Edit question
-    public void editXml(String path,int questionId,String newQuestionContent) throws NodeNotFoundException {
+    public void editXml(int testId,List<Question> questions) throws NodeNotFoundException {
+        String path=testService.getTestById(testId).getPath();
         try {
             String filepath = path + ".xml";
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -147,19 +147,46 @@ public final class XMLService {
             // Get the root element
             Node test = doc.getFirstChild();
 
-            // Get the staff element , it may not working if tag has spaces, or
-            // whatever weird characters in front...it's better to use
-            // getElementsByTagName() to get it directly.
-            // Node staff = company.getFirstChild();
 
-            // Get the staff element by tag name directly
-            Node question = doc.getElementsByTagName("question").item(questionId);
+            // Remove old questionlist from xml
+            NodeList oldQuestions = doc.getElementsByTagName("question");
 
-            if(!"text".equals(question.getChildNodes().item(0).getNodeName())) {
-                throw new NodeNotFoundException("Node text not found.");
+            while(oldQuestions.getLength()>0) {
+                test.removeChild(oldQuestions.item(0));
             }
-            Node questionText =question.getChildNodes().item(0);
-            questionText.setTextContent(newQuestionContent);
+
+            //Append new questionlist to xml
+            for (int i = 0; i < questions.size(); i++) {
+                //Question Tag
+                Element questionEl = doc.createElement("question");
+                test.appendChild(questionEl);
+                //QuestionText element
+                Element questionText = doc.createElement("text");
+                questionEl.appendChild(questionText);
+                questionText.appendChild(doc.createTextNode(questions.get(i).getText()));
+                //Question Id element
+                Element id = doc.createElement("id");
+                questionEl.appendChild(id);
+                id.appendChild(doc.createTextNode(Integer.toString(i)));
+                //Question choice element
+                Element choiceEl = doc.createElement("choices");
+                questionEl.appendChild(choiceEl);
+                //Choice element
+                for (int j = 0; j < questions.get(i).getChoices().size(); j++) {
+                    Choice currentChoice = questions.get(i).getChoices().get(j);
+                    Element numberEl = doc.createElement("c");
+                    numberEl.appendChild(doc.createTextNode(currentChoice.getText()));
+                    choiceEl.appendChild(numberEl);
+                }
+                //Answer element
+                Element answerEl = doc.createElement("answer");
+                answerEl.appendChild(doc.createTextNode(questions.get(i).getAnswer().getText()));
+
+                questionEl.appendChild(answerEl);
+
+
+            }
+
 
 
             // write the content into xml file
@@ -183,15 +210,6 @@ public final class XMLService {
 
     }
 
-    //Edit choice
-    public void editXml(String path,int questionId,int choiceId,String newChoiceContent) {
-
-    }
-
-    //Edit answer
-    public void editXml(String path,int questionId,int choiceId) {
-
-    }
 
     private Question getQuestion(Node node) {
         if(node.getNodeType() == Node.ELEMENT_NODE) {
