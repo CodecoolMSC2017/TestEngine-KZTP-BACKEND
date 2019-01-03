@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 
+import javax.mail.MessagingException;
 import javax.naming.InvalidNameException;
 import java.time.LocalDateTime;
 
@@ -33,7 +34,11 @@ public final class UserService {
     @Autowired
     private UsertokenRepository usertokenRepository;
 
-    @Autowired TokenService tokenService;
+    @Autowired
+    private TokenService tokenService;
+
+    @Autowired
+    private MailService mailService;
 
     public User getUserById(int id) {
         return userRepository.findById(id);
@@ -65,7 +70,7 @@ public final class UserService {
         return userRepository.findAll(pageable);
     }
 
-    public User createUser(String email,String username,String password,String confirmationPassword) {
+    public User createUser(String email,String username,String password,String confirmationPassword) throws MessagingException {
         if(isEveryInputValid(email,username,password,confirmationPassword)) {
             userDetailsManager.createUser(new org.springframework.security.core.userdetails.User(
                     username,
@@ -84,6 +89,8 @@ public final class UserService {
         usertoken.setToken(tokenService.generateToken());
         usertoken.setUser(user);
         usertokenRepository.save(usertoken);
+
+        mailService.sendEmail(user,"Please verify your email","<h1>Test engine</h1> <br>  <h2> Dear "+username+",</h2> <br> Activate your email: <br>  <a href=localhost:4200/activate?token="+usertoken.getToken()+">Activate</a> <br> localhost:4200/activate?token="+usertoken.getToken());
         return user;
     }
 

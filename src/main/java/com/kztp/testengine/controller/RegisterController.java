@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.mail.MessagingException;
 import java.util.Map;
 
 @RestController
@@ -17,7 +18,7 @@ public class RegisterController {
     private UserService userService;
 
     @PostMapping("/register")
-    public User add(@RequestBody Map<String,String> map) {
+    public User add(@RequestBody Map<String,String> map) throws MessagingException {
         String email = map.get("email");
         String username = map.get("username");
         String password = map.get("password");
