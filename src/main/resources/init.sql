@@ -20,6 +20,8 @@ ALTER TABLE Testratings DROP CONSTRAINT IF EXISTS Testratings_fk1;
 
 ALTER TABLE News DROP CONSTRAINT IF EXISTS News_fk0;
 
+ALTER TABLE Usertokens DROP CONSTRAINT IF EXISTS Usertokens_fk0;
+
 DROP TABLE IF EXISTS Tests;
 
 DROP TABLE IF EXISTS Authorities;
@@ -37,6 +39,8 @@ DROP TABLE IF EXISTS Poolpoints;
 DROP TABLE IF EXISTS Testratings;
 
 DROP TABLE IF EXISTS News;
+
+DROP TABLE IF EXISTS Usertokens;
 
 CREATE TABLE Tests (
 	id serial NOT NULL,
@@ -148,6 +152,17 @@ CREATE TABLE News (
   OIDS = FALSE
 );
 
+CREATE TABLE Usertokens (
+	id serial NOT NULL,
+    user_id integer NOT NULL,
+    token TEXT NOT NULL,
+    activated BOOLEAN NOT NULL,
+    activation_time DATE NOT NULL,
+    CONSTRAINT Usertokens_pg PRIMARY KEY (id)
+) WITH (
+  OIDS=FALSE
+);
+
 
 ALTER TABLE Tests ADD CONSTRAINT Tests_fk0 FOREIGN KEY (creator) REFERENCES Users(id);
 
@@ -168,4 +183,6 @@ ALTER TABLE Testratings ADD CONSTRAINT Testratings_fk0 FOREIGN KEY (voter_id) RE
 ALTER TABLE Testratings ADD CONSTRAINT Testratings_fk1 FOREIGN KEY (test_id) REFERENCES Tests(id);
 
 ALTER TABLE News ADD CONSTRAINT News_fk0 FOREIGN KEY (author) REFERENCES Users(id);
+
+ALTER TABLE Usertokens ADD CONSTRAINT Usertokens_fk0 FOREIGN KEY (user_id) REFERENCES Users(id);
 

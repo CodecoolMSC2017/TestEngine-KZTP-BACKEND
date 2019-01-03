@@ -3,7 +3,9 @@ package com.kztp.testengine.service;
 import com.kztp.testengine.exception.UnauthorizedRequestException;
 import com.kztp.testengine.exception.UserException;
 import com.kztp.testengine.model.User;
+import com.kztp.testengine.model.Usertoken;
 import com.kztp.testengine.repository.UserRepository;
+import com.kztp.testengine.repository.UsertokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +16,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 
 import javax.naming.InvalidNameException;
+import java.time.LocalDateTime;
 
 @Component
 public final class UserService {
@@ -26,6 +29,11 @@ public final class UserService {
 
     @Autowired
     private PasswordEncoder pwEncoder;
+
+    @Autowired
+    private UsertokenRepository usertokenRepository;
+
+    @Autowired TokenService tokenService;
 
     public User getUserById(int id) {
         return userRepository.findById(id);
@@ -62,12 +70,20 @@ public final class UserService {
             userDetailsManager.createUser(new org.springframework.security.core.userdetails.User(
                     username,
                     pwEncoder.encode(password),
-                    AuthorityUtils.createAuthorityList("ROLE_USER")));
+                    AuthorityUtils.createAuthorityList("ROLE_INACTIVE")));
         }
         User user = userRepository.findByUsername(username);
         user.setEmail(email);
         user.setRank("newbie");
         userRepository.save(user);
+
+        LocalDateTime localDateTime = LocalDateTime.now();
+        Usertoken usertoken = new Usertoken();
+        usertoken.setActivated(false);
+        usertoken.setActivationTime(java.sql.Date.valueOf(localDateTime.toLocalDate()));
+        usertoken.setToken(tokenService.generateToken());
+        usertoken.setUser(user);
+        usertokenRepository.save(usertoken);
         return user;
     }
 

@@ -42,6 +42,10 @@ public class User implements Serializable {
     @JsonBackReference
     private List<TestReport> reports = new ArrayList<>();
 
+    @OneToOne(mappedBy = "user")
+    @JsonBackReference
+    private Usertoken userToken = new Usertoken();
+
 
 
     public User() {
@@ -126,5 +130,13 @@ public class User implements Serializable {
 
     public void setReports(List<TestReport> reports) {
         this.reports = reports;
+    }
+
+    public Usertoken getUserToken() {
+        return userToken;
+    }
+
+    public void setUserToken(Usertoken userToken) {
+        this.userToken = userToken;
     }
 }
