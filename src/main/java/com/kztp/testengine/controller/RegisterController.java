@@ -4,9 +4,7 @@ import com.kztp.testengine.exception.UnauthorizedRequestException;
 import com.kztp.testengine.model.User;
 import com.kztp.testengine.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import java.util.Map;
@@ -33,5 +31,9 @@ public class RegisterController {
         String password = map.get("password");
         String confirmationPassword = map.get("confirmationPassword");
         return userService.createAdmin(email,username,password,confirmationPassword);
+    }
+    @GetMapping("/register/activate")
+    public void activateUser(@RequestParam("token") String token){
+        userService.activateUser(token);
     }
 }

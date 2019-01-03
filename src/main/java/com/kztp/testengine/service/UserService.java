@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import javax.mail.MessagingException;
 import javax.naming.InvalidNameException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 public final class UserService {
@@ -185,6 +186,18 @@ public final class UserService {
 
     public User getLoggedUser(){
         return getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+    }
+
+    public void activateUser(String token){
+        Usertoken userToken = usertokenRepository.findByToken(token);
+        if(token != null) {
+            User user =userToken.getUser();
+            user.getAuthorities().set(0, "ROLE_USER");
+            userRepository.save(user);
+            userToken.setActivated(true);
+            usertokenRepository.save(userToken);
+        }
+
     }
 
 
