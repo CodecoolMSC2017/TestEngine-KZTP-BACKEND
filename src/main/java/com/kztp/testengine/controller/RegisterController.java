@@ -1,6 +1,8 @@
 package com.kztp.testengine.controller;
 
+import com.kztp.testengine.exception.TokenException;
 import com.kztp.testengine.exception.UnauthorizedRequestException;
+import com.kztp.testengine.exception.UserException;
 import com.kztp.testengine.model.User;
 import com.kztp.testengine.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +35,12 @@ public class RegisterController {
         return userService.createAdmin(email,username,password,confirmationPassword);
     }
     @GetMapping("/register/activate")
-    public void activateUser(@RequestParam("token") String token){
+    public void activateUser(@RequestParam("token") String token) throws TokenException {
         userService.activateUser(token);
+    }
+
+    @GetMapping("/register/resend/{email}")
+    public void reSendEmail(@PathVariable("email") String email) throws TokenException, MessagingException, UserException {
+        userService.reSendVerificationEmail(email);
     }
 }

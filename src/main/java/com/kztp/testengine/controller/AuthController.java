@@ -1,5 +1,6 @@
 package com.kztp.testengine.controller;
 
+import com.kztp.testengine.exception.UserNotActivatedException;
 import com.kztp.testengine.model.User;
 import com.kztp.testengine.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,11 @@ public class AuthController {
     private UserService userService;
 
     @GetMapping("")
-    public User get(Principal principal) {
+    public User get(Principal principal) throws UserNotActivatedException {
+        User user =userService.getUserByUsername(principal.getName());
+        if (!user.getUserToken().isActivated()) {
+            throw new UserNotActivatedException("User not activated.");
+        }
         return userService.getUserByUsername(principal.getName());
     }
 

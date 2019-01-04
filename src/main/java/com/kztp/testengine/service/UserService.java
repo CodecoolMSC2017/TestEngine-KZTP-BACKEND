@@ -1,7 +1,9 @@
 package com.kztp.testengine.service;
 
+import com.kztp.testengine.exception.TokenException;
 import com.kztp.testengine.exception.UnauthorizedRequestException;
 import com.kztp.testengine.exception.UserException;
+import com.kztp.testengine.exception.UserNotActivatedException;
 import com.kztp.testengine.model.User;
 import com.kztp.testengine.model.Usertoken;
 import com.kztp.testengine.repository.UserRepository;
@@ -93,6 +95,17 @@ public final class UserService {
 
         mailService.sendEmail(user,"Please verify your email","<h1>Test engine</h1> <br>  <h2> Dear "+username+",</h2> <br> Activate your email: <br>  <a href=localhost:4200/activate?token="+usertoken.getToken()+">Activate</a> <br> localhost:4200/activate?token="+usertoken.getToken());
         return user;
+    }
+
+    public void reSendVerificationEmail(String email) throws UserException, TokenException, MessagingException {
+        User user = getUserByEmail(email);
+        if(user == null) {
+            throw new UserException("User with this email address not found.");
+        }
+        if(user.getUserToken().isActivated()) {
+            throw new TokenException("User already activated.");
+        }
+        mailService.sendEmail(user,"Please verify your email.","<h1>Test engine</h1> <br>  <h2> Dear "+user.getUsername()+",</h2> <br> Activate your email: <br>  <a href=localhost:4200/activate?token="+user.getUserToken().getToken()+">Activate</a> <br> localhost:4200/activate?token="+user.getUserToken().getToken());
     }
 
     public User createAdmin(String username,String email,String password,String confirmationPassword) throws UnauthorizedRequestException {
@@ -188,16 +201,22 @@ public final class UserService {
         return getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
-    public void activateUser(String token){
-        Usertoken userToken = usertokenRepository.findByToken(token);
-        if(token != null) {
-            User user =userToken.getUser();
-            user.getAuthorities().set(0, "ROLE_USER");
-            userRepository.save(user);
-            userToken.setActivated(true);
-            usertokenRepository.save(userToken);
+    public void activateUser(String token) throws TokenException {
+        if (token.equals("")) {
+            throw new TokenException("Enter token.");
         }
-
+        Usertoken userToken = usertokenRepository.findByToken(token);
+        if(userToken == null) {
+            throw new TokenException("Invalid activation token.");
+        }
+        User user =userToken.getUser();
+        if(userToken.isActivated()) {
+            throw new TokenException("User already activated.");
+        }
+        user.getAuthorities().set(0, "ROLE_USER");
+        userRepository.save(user);
+        userToken.setActivated(true);
+        usertokenRepository.save(userToken);
     }
 
 
