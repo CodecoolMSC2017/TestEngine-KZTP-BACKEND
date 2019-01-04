@@ -19,8 +19,10 @@ public class AuthController {
     @GetMapping("")
     public User get(Principal principal) throws UserNotActivatedException {
         User user =userService.getUserByUsername(principal.getName());
-        if (!user.getUserToken().isActivated()) {
-            throw new UserNotActivatedException("User not activated.");
+        if(!user.getAuthorities().contains("ROLE_ADMIN")) {
+            if (!user.getUserToken().isActivated()) {
+                throw new UserNotActivatedException("User not activated.");
+            }
         }
         return userService.getUserByUsername(principal.getName());
     }
