@@ -96,8 +96,8 @@ public class TestController {
     }
 
     @GetMapping("/user/tests/{username}/{live}")
-    public List<Test> getTestsByUser(@PathVariable("username") String username,@PathVariable("live") boolean live) {
-        return testService.findAllByUserName(username,live);
+    public Page<Test> getTestsByUser(@PathVariable("username") String username,@PathVariable("live") boolean live,@RequestParam("page") int pageNumber) {
+        return testService.findAllByUserName(username,live,PageRequest.of(pageNumber,20,Sort.Direction.ASC,"type"));
     }
 
     @GetMapping("/user/test/taketest/{id}")
