@@ -105,7 +105,7 @@ public final class UserService {
         if(user.getUserToken().isActivated()) {
             throw new TokenException("User already activated.");
         }
-        mailService.sendEmail(user,"Please verify your email.","<h1>Test engine</h1> <br>  <h2> Dear "+user.getUsername()+",</h2> <br> Activate your email: <br>  <a href=localhost:4200/activate?token="+user.getUserToken().getToken()+">Activate</a> <br> localhost:4200/activate?token="+user.getUserToken().getToken());
+        mailService.sendEmail(user,"Please verify your email.","<h1>Test engine</h1> <br>  <h2> Dear "+user.getUsername()+",</h2> <br> Activate your email by pasting this verification code: <br> " + user.getUserToken().getToken() + " <br> or by clicking the verification link <br> <a href='localhost:4200/activate?token="+user.getUserToken().getToken()+"'>Activate</a> <br> ");
     }
 
     public User createAdmin(String username,String email,String password,String confirmationPassword) throws UnauthorizedRequestException {
