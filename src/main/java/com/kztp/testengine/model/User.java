@@ -15,6 +15,8 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String username;
+    @JsonBackReference
+    private String password;
     private String email;
     private String rank;
     private boolean enabled;
@@ -45,6 +47,10 @@ public class User implements Serializable {
     @OneToOne(mappedBy = "user")
     @JsonBackReference
     private Usertoken userToken = new Usertoken();
+
+    @OneToOne(mappedBy = "user")
+    @JsonBackReference
+    private PasswordToken passwordToken = new PasswordToken();
 
 
 
@@ -138,5 +144,21 @@ public class User implements Serializable {
 
     public void setUserToken(Usertoken userToken) {
         this.userToken = userToken;
+    }
+
+    public PasswordToken getPasswordToken() {
+        return passwordToken;
+    }
+
+    public void setPasswordToken(PasswordToken passwordToken) {
+        this.passwordToken = passwordToken;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -1,11 +1,11 @@
 package com.kztp.testengine.service;
 
-import com.kztp.testengine.exception.TokenException;
-import com.kztp.testengine.exception.UnauthorizedRequestException;
-import com.kztp.testengine.exception.UserException;
-import com.kztp.testengine.exception.UserNotActivatedException;
+import com.kztp.testengine.exception.*;
+import com.kztp.testengine.model.PasswordToken;
+import com.kztp.testengine.model.ResetPassword;
 import com.kztp.testengine.model.User;
 import com.kztp.testengine.model.Usertoken;
+import com.kztp.testengine.repository.PasswordTokenRepository;
 import com.kztp.testengine.repository.UserRepository;
 import com.kztp.testengine.repository.UsertokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,7 @@ import javax.mail.MessagingException;
 import javax.naming.InvalidNameException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public final class UserService {
@@ -42,6 +43,9 @@ public final class UserService {
 
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private PasswordTokenRepository passwordTokenRepository;
 
     public User getUserById(int id) {
         return userRepository.findById(id);
@@ -134,6 +138,25 @@ public final class UserService {
         userRepository.save(user);
     }
 
+    public void changePassword(ResetPassword resetPassword) throws PasswordException, UserException {
+        String token = resetPassword.getToken();
+        PasswordToken passwordToken = passwordTokenRepository.findByToken(token);
+        if(!resetPassword.getPassword().equals(resetPassword.getPassword2())){
+            throw new PasswordException("The two passwords are different");
+        }
+        if(passwordToken.getUser() == null){
+            throw new UserException("Bad token!");
+        }
+        User user = passwordToken.getUser();
+        user.setPassword(pwEncoder.encode(resetPassword.getPassword()));
+        userRepository.save(user);
+
+        passwordTokenRepository.delete(passwordToken);
+
+
+
+    }
+
     private boolean isEmailTaken(String email) {
         User user = userRepository.findByEmail(email);
 
@@ -217,6 +240,22 @@ public final class UserService {
         userRepository.save(user);
         userToken.setActivated(true);
         usertokenRepository.save(userToken);
+    }
+
+    public void requestPasswordReset(String email) throws UserException, MessagingException {
+        User user = userRepository.findByEmail(email);
+        if(user == null){
+            throw new UserException("Email not found");
+        }
+        String token = tokenService.generateToken();
+        PasswordToken passwordToken = new PasswordToken();
+        passwordToken.setUser(user);
+        passwordToken.setToken(token);
+        LocalDateTime localDateTime = LocalDateTime.now();
+        passwordToken.setExpirationDate(java.sql.Date.valueOf(localDateTime.toLocalDate().plusDays(1)));
+        passwordTokenRepository.save(passwordToken);
+
+        mailService.sendEmail(user,"Password reset","localhost:4200/resetpw?token="+token);
     }
 
 
