@@ -141,6 +141,11 @@ public class TestController {
         return testReportService.getAllReportedTest(PageRequest.of(pageNumber, pageSize, Sort.Direction.ASC, "solved"));
     }
 
+    @GetMapping("/user/test/testdetails/{id}")
+    public TestDetails getTestDetails(@PathVariable("id") int id) {
+        return usersTestService.getTestDetails(id);
+    }
+
     @GetMapping("/admin/test/reportedtests/{id}")
     public Page<TestReport> getReportedTestForUser(@PathVariable("id") int id, @RequestParam("page") int pageNumber,
                                                    @RequestParam("pagesize") int pageSize){

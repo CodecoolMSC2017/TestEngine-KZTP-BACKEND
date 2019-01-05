@@ -10,10 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public final class TestService {
@@ -170,7 +168,7 @@ public final class TestService {
             int testAbove70Count =0;
             for (UsersTest test:tests) {
                 testCount++;
-                if(test.getPercetage() >= 70) {
+                if(test.getPercentage() >= 70) {
                     testAbove70Count++;
                 }
             }
@@ -182,7 +180,7 @@ public final class TestService {
             int testAbove50Count =0;
             for (UsersTest test:tests) {
                 testCount++;
-                if(test.getPercetage() >= 50) {
+                if(test.getPercentage() >= 50) {
                     testAbove50Count++;
                 }
             }

@@ -66,11 +66,11 @@ public class UsersTest {
         this.actualPoints = actualPoints;
     }
 
-    public Integer getPercetage() {
+    public Integer getPercentage() {
         return percentage;
     }
 
-    public void setPercetage(Integer percentage) {
+    public void setPercentage(Integer percentage) {
         this.percentage = percentage;
     }
 }

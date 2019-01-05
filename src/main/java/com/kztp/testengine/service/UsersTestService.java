@@ -1,6 +1,7 @@
 package com.kztp.testengine.service;
 
 import com.kztp.testengine.model.Test;
+import com.kztp.testengine.model.TestDetails;
 import com.kztp.testengine.model.User;
 import com.kztp.testengine.model.UsersTest;
 import com.kztp.testengine.repository.UsersTestRepository;
@@ -19,6 +20,9 @@ public final class UsersTestService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private TestService testService;
+
     public List<UsersTest> getCompletedTestsByUser(User user) {
         return usersTestRepository.findByUser(user);
     }
@@ -32,6 +36,21 @@ public final class UsersTestService {
         return usersTestRepository.findByTest(test);
     }
 
+    public TestDetails getTestDetails(int testId) {
+        Test test = testService.getTestById(testId);
+        int averagePercentage;
+        int timesTaken=usersTestRepository.findByTest(test).size();
+        int income=test.getPrice()*timesTaken;
+        Float percentage = usersTestRepository.getAveragePercentageOfUsersTestsByTest(testId);
+        if(percentage == null) {
+            averagePercentage = 0;
+        }
+        else {
+            averagePercentage=Math.round(percentage);
+        }
+        return new TestDetails(averagePercentage,timesTaken,income);
+    }
+
     public UsersTest getUsersTestById(int id) {
         return usersTestRepository.findById(id);
     }
@@ -42,7 +61,7 @@ public final class UsersTestService {
         usersTest.setTest(test);
         usersTest.setMaxPoints(maxPoints);
         usersTest.setActualPoints(actualPoints);
-        usersTest.setPercetage(percentage);
+        usersTest.setPercentage(percentage);
         usersTestRepository.save(usersTest);
     }
 
