@@ -40,6 +40,9 @@ public class TestController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private DeleteRequestService deleteRequestService;
+
     @GetMapping("/test/{id}")
     public Test getTestById(@PathVariable("id")int id){
         return testService.getTestById(id);
@@ -213,6 +216,11 @@ public class TestController {
     @PostMapping("/test/deleterequest/{id}")
     public void requestTestDelete(@PathVariable("id") int id) {
         testService.requestTestDelete(id);
+    }
+
+    @GetMapping("/admin/deleterequests/all")
+    public Page<DeleteRequest> getAllDeleteRequests(@RequestParam("page") int page) throws UnauthorizedRequestException {
+        return deleteRequestService.getAllUnSolvedDeleteRequest(PageRequest.of(page,10));
     }
 
 }
