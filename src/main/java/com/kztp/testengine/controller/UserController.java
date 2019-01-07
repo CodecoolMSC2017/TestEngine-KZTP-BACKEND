@@ -14,13 +14,12 @@ import javax.mail.MessagingException;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @PostMapping("/change-password")
+    @PostMapping("/user/change-password")
     public void changePassword(@RequestBody Map<String,String> map) {
         User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         String oldPassword = map.get("oldpassword");
@@ -28,13 +27,13 @@ public class UserController {
         userService.changePassword(user.getId(),oldPassword,newPassword);
     }
 
-    @GetMapping(path = "/{username}",
+    @GetMapping(path = "/user/{username}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public User getUserByUsername(@PathVariable("username")String username){
         return userService.getUserByUsername(username);
     }
 
-    @GetMapping(path = "/mysettings")
+    @GetMapping(path = "/user/mysettings")
     public User getLoggedUser(){
         return userService.getLoggedUser();
     }
@@ -45,11 +44,11 @@ public class UserController {
     }
 
     @PostMapping(path="/requestpasswordreset")
-    public void requestPasswordReset(String email) throws UserException, MessagingException {
+    public void requestPasswordReset(@RequestBody String email) throws UserException, MessagingException {
         userService.requestPasswordReset(email);
     }
 
-    @GetMapping("/rank/progress")
+    @GetMapping("/user/rank/progress")
     public int getUserProgress() {
         return userService.getUserProgress();
     }
