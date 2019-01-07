@@ -177,6 +177,9 @@ public class TestController {
     public void editTest(@PathVariable("id") int testId,@RequestBody List<Question> questions
                          ) throws NodeNotFoundException, UnauthorizedRequestException {
         User loggedInUser = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(testService.getTestById(testId).isLive() && !loggedInUser.getAuthorities().contains("ROLE_ADMIN")) {
+            throw new UnauthorizedRequestException("You are not permitted to edit the test.");
+        }
         if(!testService.getTestById(testId).getCreator().getId().equals(loggedInUser.getId()) && !loggedInUser.getAuthorities().contains("ROLE_ADMIN")) {
             throw new UnauthorizedRequestException("You are not permitted to edit the test.");
         }
@@ -187,6 +190,9 @@ public class TestController {
     @GetMapping("/test/edit/{id}")
     public List<Question> getTestToEdit(@PathVariable("id") int testId) throws UnauthorizedRequestException {
         User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(testService.getTestById(testId).isLive() && !user.getAuthorities().contains("ROLE_ADMIN")) {
+            throw new UnauthorizedRequestException("You are not permitted to edit the test.");
+        }
         if(!user.getAuthorities().contains("ROLE_ADMIN") && !user.getId().equals(testService.getTestById(testId).getCreator().getId())) {
             throw new UnauthorizedRequestException("You don't have the permission to edit the test.");
         }
