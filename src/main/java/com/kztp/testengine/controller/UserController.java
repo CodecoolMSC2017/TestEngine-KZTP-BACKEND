@@ -2,6 +2,7 @@ package com.kztp.testengine.controller;
 
 import com.kztp.testengine.exception.PasswordException;
 import com.kztp.testengine.exception.UserException;
+import com.kztp.testengine.model.NewPassword;
 import com.kztp.testengine.model.ResetPassword;
 import com.kztp.testengine.model.User;
 import com.kztp.testengine.service.UserService;
@@ -20,11 +21,9 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/user/change-password")
-    public void changePassword(@RequestBody Map<String,String> map) {
+    public void changePassword(@RequestBody NewPassword newPassword) throws UserException {
         User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        String oldPassword = map.get("oldpassword");
-        String newPassword = map.get("newpassword");
-        userService.changePassword(user.getId(),oldPassword,newPassword);
+        userService.changePassword(newPassword);
     }
 
     @GetMapping(path = "/user/{username}",

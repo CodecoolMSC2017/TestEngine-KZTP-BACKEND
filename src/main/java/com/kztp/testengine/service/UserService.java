@@ -130,11 +130,15 @@ public final class UserService {
         }
         return userRepository.findByUsername(username);
     }
-    public void changePassword(int userId,String oldPassword, String newPassword) {
-        User user = userRepository.findById(userId);
-        if (oldPassword.equals(pwEncoder.encode(oldPassword))) {
-            userDetailsManager.changePassword(oldPassword,pwEncoder.encode(newPassword));
+    public void changePassword(NewPassword newPassword) throws UserException {
+        User user = getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(!newPassword.getNewPassword1().equals(newPassword.getNewpassword2())){
+            throw new UserException("Passwords does not match");
         }
+        if (!pwEncoder.encode(newPassword.getOldPassword()).equals(user.getPassword())) {
+           throw new UserException("Wrong password");
+        }
+        userDetailsManager.changePassword(newPassword.getOldPassword(),pwEncoder.encode(newPassword.getNewPassword1()));
         userRepository.save(user);
     }
 
