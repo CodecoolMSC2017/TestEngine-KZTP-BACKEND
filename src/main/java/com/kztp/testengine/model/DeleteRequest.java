@@ -12,7 +12,6 @@ public class DeleteRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @OneToOne
-    @JsonBackReference
     private Test test;
     private boolean solved;
 
