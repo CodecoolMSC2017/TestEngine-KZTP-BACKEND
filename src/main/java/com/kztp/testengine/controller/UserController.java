@@ -49,4 +49,9 @@ public class UserController {
         userService.requestPasswordReset(email);
     }
 
+    @GetMapping("/rank/progress")
+    public int getUserProgress() {
+        return userService.getUserProgress();
+    }
+
 }

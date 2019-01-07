@@ -1,10 +1,7 @@
 package com.kztp.testengine.service;
 
 import com.kztp.testengine.exception.*;
-import com.kztp.testengine.model.PasswordToken;
-import com.kztp.testengine.model.ResetPassword;
-import com.kztp.testengine.model.User;
-import com.kztp.testengine.model.Usertoken;
+import com.kztp.testengine.model.*;
 import com.kztp.testengine.repository.PasswordTokenRepository;
 import com.kztp.testengine.repository.UserRepository;
 import com.kztp.testengine.repository.UsertokenRepository;
@@ -43,6 +40,9 @@ public final class UserService {
 
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private UsersTestService usersTestService;
 
     @Autowired
     private PasswordTokenRepository passwordTokenRepository;
@@ -218,6 +218,35 @@ public final class UserService {
             userRepository.save(user);
         }
 
+    }
+
+    public int getUserProgress() {
+        User user = getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        List<UsersTest> usersTests = usersTestService.getLoggedUserCompletedTests();
+        int testCount =0;
+        if (user.getRank().equals("user")) { //100test 70%
+            int testAbove70Count =0;
+            for (UsersTest test:usersTests) {
+                testCount++;
+                if(test.getPercentage() >= 70) {
+                    testAbove70Count++;
+                }
+            }
+            return testAbove70Count;
+        }
+        else if (user.getRank().equals("newbie")) { //15test 50%
+            int testAbove50Count =0;
+            for (UsersTest test:usersTests) {
+                testCount++;
+                if(test.getPercentage() >= 50) {
+                    testAbove50Count++;
+                }
+            }
+            return testAbove50Count;
+        }
+        else {
+            return 100;
+        }
     }
 
     public User getLoggedUser(){
