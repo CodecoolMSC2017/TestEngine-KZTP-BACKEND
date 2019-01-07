@@ -4,6 +4,16 @@ INSERT INTO public.users(
 INSERT INTO public.authorities(
 	username, authority)
 	VALUES ('admin', 'ROLE_ADMIN');
+INSERT INTO public.users(
+	username, password, email, rank, enabled)
+	VALUES ('user', '$2a$10$Had.hSuaOpIvm9CqTVNR7u9Gse3WMRnvKBVvm8kfs4e4FQGkajDLe', 'user@user.com', 'user', true);
+INSERT INTO public.authorities(
+	username, authority)
+	VALUES ('user', 'ROLE_USER');
+
+INSERT INTO public.usertokens(
+	user_id, token, activated, activation_time)
+	VALUES (2, 'D1uazD3t5ot1ow2S0YYwPqUG5ou4ZKlT8x18', true, '2019-01-07');
 
 
 INSERT INTO public.tests(
