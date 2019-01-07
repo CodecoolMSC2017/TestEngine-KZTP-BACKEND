@@ -24,6 +24,8 @@ ALTER TABLE Usertokens DROP CONSTRAINT IF EXISTS Usertokens_fk0;
 
 ALTER TABLE Passwordtokens DROP CONSTRAINT IF EXISTS Passwordtokens_fk0;
 
+ALTER TABLE Deleterequests DROP CONSTRAINT IF EXISTS Deleterequests_fk0;
+
 DROP TABLE IF EXISTS Tests;
 
 DROP TABLE IF EXISTS Authorities;
@@ -45,6 +47,8 @@ DROP TABLE IF EXISTS News;
 DROP TABLE IF EXISTS Usertokens;
 
 DROP TABLE IF EXISTS Passwordtokens;
+
+DROP TABLE IF EXISTS Deleterequests;
 
 CREATE TABLE Tests (
 	id serial NOT NULL,
@@ -177,6 +181,15 @@ CREATE TABLE Passwordtokens (
   OIDS=FALSE
 );
 
+CREATE TABLE Deleterequests (
+    id serial NOT NULL,
+    test_id integer NOT NULL,
+    solved boolean DEFAULT FALSE,
+    CONSTRAINT Deleterequests_pg PRIMARY KEY (id)
+) WITH (
+  OIDS=FALSE
+);
+
 
 ALTER TABLE Tests ADD CONSTRAINT Tests_fk0 FOREIGN KEY (creator) REFERENCES Users(id);
 
@@ -202,4 +215,5 @@ ALTER TABLE Usertokens ADD CONSTRAINT Usertokens_fk0 FOREIGN KEY (user_id) REFER
 
 ALTER TABLE Passwordtokens ADD CONSTRAINT Passwordtokens_fk0 FOREIGN KEY (user_id) REFERENCES Users(id);
 
+ALTER TABLE Deleterequests ADD CONSTRAINT Deleterequests_fk0 FOREIGN KEY (test_id) REFERENCES Tests(id);
 

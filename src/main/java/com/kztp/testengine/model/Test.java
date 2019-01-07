@@ -44,6 +44,10 @@ public class Test {
     @OneToMany(mappedBy = "test")
     private List<UsersTest> usersTests = new ArrayList<>();
 
+    @OneToOne(mappedBy = "test")
+    @JsonBackReference
+    private DeleteRequest deleteRequest = new DeleteRequest();
+
     public Test() {
     }
 

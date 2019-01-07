@@ -198,4 +198,21 @@ public class TestController {
         }
         return xmlService.readXml(testService.getTestById(testId).getPath());
     }
+
+    @PostMapping("/admin/test/delete/{id}")
+    public void disableTest(@PathVariable("id") int testId) throws UnauthorizedRequestException {
+        User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(user.getAuthorities().contains("ROLE_ADMIN")) {
+            testService.disableTest(testService.getTestById(testId));
+        }
+        else {
+            throw new UnauthorizedRequestException("You don't have permission for this action.");
+        }
+    }
+
+    @PostMapping("/test/deleterequest/{id}")
+    public void requestTestDelete(@PathVariable("id") int id) {
+        testService.requestTestDelete(id);
+    }
+
 }

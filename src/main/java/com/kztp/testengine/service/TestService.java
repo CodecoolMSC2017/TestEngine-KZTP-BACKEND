@@ -27,6 +27,9 @@ public final class TestService {
     @Autowired
     private UsersTestService usersTestService;
 
+    @Autowired
+    private DeleteRequestService deleteRequestService;
+
     public Test getTestById(int id){
         return testRepository.findById(id);
     }
@@ -119,8 +122,6 @@ public final class TestService {
 
     }
 
-    //User user, Test test,int maxPoints,int actualPoints,int percentage
-
     public TestResult sendSolution(UserSolution userSolution) throws UserException {
         User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         int actualPoints = 0;
@@ -209,5 +210,21 @@ public final class TestService {
         User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         Test test = testRepository.findById(testId);
         return usersTestService.didUserTakeTest(user,test);
+    }
+
+    public void disableTest(Test test) {
+        test.setEnabled(false);
+        if(deleteRequestService.findByTest(test) != null) {
+            deleteRequestService.setDeleteRequestSolved(deleteRequestService.findByTest(test).getId());
+        }
+        testRepository.save(test);
+    }
+
+    public void requestTestDelete(int id) {
+        User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Test test = testRepository.findById(id);
+        if(user.getId() == test.getCreator().getId()) {
+            deleteRequestService.createDeleteRequest(test);
+        }
     }
 }
