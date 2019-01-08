@@ -50,7 +50,7 @@ public final class TestService {
         if (user.getRank().equals("newbie")) {
             throw new UnauthorizedRequestException("Your rank is too low to see this page.");
         }
-        return testRepository.findByLiveFalse(pageable);
+        return testRepository.findByLiveFalseAndEnabledTrue(pageable);
     }
 
     public Page<Test> findAllByUserName(String userName,boolean live,Pageable pageable) {
@@ -58,10 +58,10 @@ public final class TestService {
         if (userService.userExists(userName)) {
             User user = userService.getUserByUsername(userName);
             if(live) {
-                tests = testRepository.findByCreatorAndLiveTrue(user,pageable);
+                tests = testRepository.findByCreatorAndLiveTrueAndEnabledTrue(user,pageable);
             }
             else {
-                tests = testRepository.findByCreatorAndLiveFalse(user,pageable);
+                tests = testRepository.findByCreatorAndLiveFalseAndEnabledTrue(user,pageable);
             }
         } else {
             throw new IllegalArgumentException("No user with this name.");
@@ -90,6 +90,7 @@ public final class TestService {
         test.setPrice(price);
         test.setMaxPoints(questions.size());
         test.setType(type);
+        test.setEnabled(true);
         test.setCreator(userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()));
         addTestToDatabase(test);
         return test;

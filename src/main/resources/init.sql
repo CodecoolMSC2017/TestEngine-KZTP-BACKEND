@@ -60,7 +60,7 @@ CREATE TABLE Tests (
 	price integer NOT NULL,
 	max_points integer NOT NULL,
 	creator integer NOT NULL,
-	enabled BOOLEAN NOT NULL,
+	enabled BOOLEAN DEFAULT true,
 	type VARCHAR(255) NOT NULL,
 	live BOOLEAN DEFAULT false,
 	CONSTRAINT Tests_pk PRIMARY KEY (id)
