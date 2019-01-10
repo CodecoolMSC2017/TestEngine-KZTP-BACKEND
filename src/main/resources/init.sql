@@ -96,6 +96,7 @@ CREATE TABLE Users (
 CREATE TABLE Testreports (
 	id serial NOT NULL,
 	description TEXT NOT NULL,
+	userdescription TEXT,
 	user_id integer NOT NULL,
 	test_id integer NOT NULL,
 	solved boolean DEFAULT false,

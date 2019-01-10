@@ -167,8 +167,8 @@ public class TestController {
     }
 
     @PostMapping("/user/test/report/{id}")
-    public String reportTest(@PathVariable("id") int testId,@RequestBody String description) {
-        return testReportService.reportTest(testService.getTestById(testId),description);
+    public String reportTest(@PathVariable("id") int testId,@RequestParam("description") String description,@RequestParam("userdescription") String userdescription) {
+        return testReportService.reportTest(testService.getTestById(testId),description,userdescription);
     }
 
     @PostMapping("/admin/report/solved/{id}")

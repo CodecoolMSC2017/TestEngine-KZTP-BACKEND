@@ -35,11 +35,12 @@ public final class TestReportService {
         return testReportsRepository.findAllByReporterAndSolvedFalse(user,pageable);
     }
 
-    public String reportTest(Test test,String description) {
+    public String reportTest(Test test,String description,String userdescription) {
         User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         if(testReportsRepository.existsByReporterAndReportedTest(user,test)) {
             TestReport existingReport = testReportsRepository.findByReporterAndReportedTest(user,test);
             existingReport.setDescription(description);
+            existingReport.setUserDescription(userdescription);
             existingReport.setSolved(false);
             testReportsRepository.save(existingReport);
             return "Description updated on report.";
@@ -48,6 +49,7 @@ public final class TestReportService {
             TestReport testReport = new TestReport();
             testReport.setReporter(user);
             testReport.setDescription(description);
+            testReport.setUserDescription(userdescription);
             testReport.setReportedTest(test);
             testReportsRepository.save(testReport);
 

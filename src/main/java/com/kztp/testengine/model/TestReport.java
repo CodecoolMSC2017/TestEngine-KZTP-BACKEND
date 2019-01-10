@@ -9,6 +9,8 @@ public class TestReport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String description;
+    @Column(name="userdescription")
+    private String userDescription;
 
     @ManyToOne
     @JoinColumn(name="user_id",referencedColumnName = "id")
@@ -35,6 +37,14 @@ public class TestReport {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getUserDescription() {
+        return userDescription;
+    }
+
+    public void setUserDescription(String userDescription) {
+        this.userDescription = userDescription;
     }
 
     public User getReporter() {
