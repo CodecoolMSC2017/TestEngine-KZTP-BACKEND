@@ -2,6 +2,7 @@ package com.kztp.testengine.service;
 
 import com.kztp.testengine.exception.InvalidUploadTypeException;
 import com.kztp.testengine.exception.NodeNotFoundException;
+import com.kztp.testengine.exception.TestException;
 import com.kztp.testengine.exception.UnauthorizedRequestException;
 import com.kztp.testengine.model.Choice;
 import com.kztp.testengine.model.Question;
@@ -136,7 +137,7 @@ public final class XMLService {
         return questionList;
     }
 
-    public void editXml(int testId,List<Question> questions) throws NodeNotFoundException {
+    public void editXml(int testId,List<Question> questions) throws NodeNotFoundException, TestException {
         String path=testService.getTestById(testId).getPath();
         try {
             String filepath = path + ".xml";
@@ -157,6 +158,9 @@ public final class XMLService {
 
             //Append new questionlist to xml
             for (int i = 0; i < questions.size(); i++) {
+                if(!questions.get(i).getChoices().contains(questions.get(i).getAnswer())){
+                    throw new TestException("Answer must be in choice list");
+                }
                 //Question Tag
                 Element questionEl = doc.createElement("question");
                 test.appendChild(questionEl);
@@ -181,9 +185,7 @@ public final class XMLService {
                 //Answer element
                 Element answerEl = doc.createElement("answer");
                 answerEl.appendChild(doc.createTextNode(questions.get(i).getAnswer().getText()));
-
                 questionEl.appendChild(answerEl);
-
 
             }
 
