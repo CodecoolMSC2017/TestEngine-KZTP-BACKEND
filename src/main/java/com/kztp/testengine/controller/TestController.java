@@ -178,7 +178,7 @@ public class TestController {
 
     @PostMapping("/test/edited/{id}")
     public void editTest(@PathVariable("id") int testId,@RequestBody List<Question> questions
-                         ) throws NodeNotFoundException, UnauthorizedRequestException {
+                         ) throws NodeNotFoundException, UnauthorizedRequestException, TestException {
         User loggedInUser = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         if(testService.getTestById(testId).isLive() && !loggedInUser.getAuthorities().contains("ROLE_ADMIN")) {
             throw new UnauthorizedRequestException("You are not permitted to edit the test.");
