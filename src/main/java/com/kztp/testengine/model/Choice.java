@@ -17,4 +17,12 @@ public class Choice {
     public void setText(String text) {
         this.text = text;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj == this) return true;
+        if (!(obj instanceof Choice))return false;
+        return ((Choice) obj).text.equals(text);
+    }
 }
